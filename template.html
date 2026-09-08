@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LANDO — GRIDO1 Racing Systems / Kimi Antonelli</title>
+<meta name="description" content="Kimi Antonelli, driver_012 of GRIDO1 Racing Systems. Rookie season, Mercedes-AMG F1.">
+<meta name="theme-color" content="#f7fafb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23090a0b'/%3E%3Cpath d='M6 6h13v4H10v12h9v-6h-5v-4h9v14H6z' fill='%2302d2e3'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://storage.getlayers.ai" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="preload" as="image" href="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/scene/person-diffuse.webp" crossorigin>
+<link rel="preload" as="fetch" href="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/scene/helmet3.glb" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
+    "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs"
+  }
+}
+</script>
+
+<script>
+  /* Before anything else: the page opens behind a veil and always starts at the top. */
+  history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+</script>
+
+<style>
+/* ============================================================================
+   TOKENS — tier 1 (raw), tier 2 (roles). The only place a literal appears.
+   There is no dark-mode override: the theme is fixed, each block picks a surface.
+   ========================================================================= */
+:root {
+  --raw-color-ice-50: #f7fafb;
+  --raw-color-ice-100: #ebeef1;
+  --raw-color-ice-200: #dfe5e9;
+  --raw-color-steel-400: #b6c1c8;
+  --raw-color-ink-950: #090a0b;
+  --raw-color-ink-900: #0e0f14;
+  --raw-color-ink-800: #1b1d24;
+  --raw-color-ink-700: #2a2d36;
+  --raw-color-ink-alpha-35: rgb(9 10 11 / 0.35);
+  --raw-color-slate-500: #7a7a7a;
+  --raw-color-slate-600: #4d4d4d;
+  --raw-color-slate-900: #1e1e1e;
+  --raw-color-cyan-400: #02d2e3;
+  --raw-color-cyan-alpha-25: rgb(2 210 227 / 0.25);
+  --raw-color-stone-600: #535450;
+  --raw-color-white-alpha-10: rgb(255 255 255 / 0.1);
+  --raw-color-white-alpha-20: rgb(255 255 255 / 0.2);
+  --raw-color-ink-alpha-08: rgb(9 10 11 / 0.08);
+  --raw-color-white-alpha-40: rgb(255 255 255 / 0.4);
+  --raw-color-white: #ffffff;
+  --raw-color-orange-500: #ff6b00;
+
+  --raw-font-size-96: 6rem;
+  --raw-font-size-70: 4.375rem;
+  --raw-font-size-52: 3.25rem;
+  --raw-font-size-38: 2.375rem;
+  --raw-font-size-20: 1.25rem;
+  --raw-font-size-18: 1.125rem;
+  --raw-font-size-16: 1rem;
+  --raw-font-size-14: 0.875rem;
+  --raw-font-size-12: 0.75rem;
+  --raw-font-size-55: 3.4375rem;
+  --raw-font-size-36: 2.25rem;
+
+  --raw-leading-95: 0.95;
+  --raw-leading-90: 0.9;
+  --raw-leading-72: 0.72;
+  --raw-leading-110: 1.1;
+  --raw-tracking-stat: -0.08em;
+  --raw-tracking-label: -0.04em;
+  --raw-tracking-eyebrow: -0.02em;
+
+  --raw-radius-16: 1rem; --raw-radius-48: 3rem; --raw-radius-100: 6.25rem;
+  --raw-duration-fast: 150ms; --raw-duration-normal: 250ms; --raw-duration-slow: 700ms;
+  --raw-edge-fade-share: 10%; --raw-edge-fade-length: 6rem;
+
+  /* tier 2 — roles */
+  --background: var(--raw-color-ice-50);
+  --foreground: var(--raw-color-ink-950);
+  --foreground-muted: var(--raw-color-ink-alpha-35);
+  --surface-dark: var(--raw-color-ink-900);
+  --surface-dark-raised: var(--raw-color-ink-800);
+  --surface-black: var(--raw-color-ink-950);
+  --surface-muted: var(--raw-color-ice-100);
+  --surface-soft: var(--raw-color-ice-200);
+  --foreground-on-dark: var(--raw-color-white);
+  --foreground-on-dark-muted: var(--raw-color-steel-400);
+  --foreground-on-dark-faint: var(--raw-color-white-alpha-40);
+  --border-muted: var(--raw-color-ice-200);
+  --border-on-dark: var(--raw-color-ink-700);
+  --map-dot: var(--raw-color-slate-500);
+  --map-grid: var(--raw-color-slate-600);
+  --map-grid-ghost: var(--raw-color-slate-900);
+  --map-mark: var(--raw-color-ice-50);
+  --timeline-outline: var(--raw-color-stone-600);
+  --timeline-fill: var(--raw-color-white-alpha-10);
+  --timeline-rail: var(--raw-color-white-alpha-20);
+  --paddock-contour: var(--raw-color-ink-alpha-08);
+  --footer-contour: var(--raw-color-white-alpha-10);
+  --accent: var(--raw-color-cyan-400);
+  --accent-muted: var(--raw-color-cyan-alpha-25);
+
+  --type-impact: var(--raw-font-size-96);
+  --type-display-lg: var(--raw-font-size-70);
+  --type-display: var(--raw-font-size-52);
+  --type-heading: var(--raw-font-size-38);
+  --type-title: var(--raw-font-size-20);
+  --type-lead: var(--raw-font-size-18);
+  --type-label: var(--raw-font-size-16);
+  --type-body: var(--raw-font-size-14);
+  --type-eyebrow: var(--raw-font-size-12);
+  --type-display-sm: var(--raw-font-size-55);
+  --type-year: var(--raw-font-size-36);
+
+  --leading-headline: 0.95; --leading-flat: 0.9; --leading-cap: 0.72; --leading-display: 1.1;
+  --duration-fast: 150ms; --duration-normal: 250ms; --duration-plate: 700ms;
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --ease-plate: cubic-bezier(0.33, 0, 0, 1);
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Oswald", Impact, sans-serif;
+}
+
+/* ---- root font-size bands: a rem is one design pixel of the band's frame ---- */
+html { font-size: 16px; }
+@media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+@media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+@media (max-width: 1279px) { html { font-size: 16px; } }
+
+/* the 1441-1920 band is based on 1920 but the hero was drawn at 1440 */
+@media (min-width: 1441px) and (max-width: 1920px) {
+  [data-hero] { --hero-base: calc(1920 / 1440);
+    --type-impact: calc(6rem * var(--hero-base)); --type-display-lg: calc(4.375rem * var(--hero-base));
+    --type-display: calc(3.25rem * var(--hero-base)); --type-heading: calc(2.375rem * var(--hero-base));
+    --type-title: calc(1.25rem * var(--hero-base)); --type-lead: calc(1.125rem * var(--hero-base));
+    --type-label: calc(1rem * var(--hero-base)); --type-body: calc(0.875rem * var(--hero-base));
+    --type-eyebrow: calc(0.75rem * var(--hero-base)); }
+  [data-hero] [data-hero-panels] { width: calc(13.625rem * var(--hero-base, 1)); }
+  [data-hero] [data-hero-stats]  { width: calc(10.75rem * var(--hero-base, 1)); }
+  [data-hero] [data-hero-map]    { height: calc(3.125rem * var(--hero-base, 1)); width: calc(4.875rem * var(--hero-base, 1)); }
+}
+
+/* ============================================================================
+   RESET
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100lvh;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, svg, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p, figure { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+html.is-locked { position: relative; overflow: hidden; height: 100%; }
+
+/* the text engine — no overflow clip anywhere */
+.tx { display: flex; flex-wrap: wrap; column-gap: 0.3em; }
+.tx > span { display: inline-block; will-change: transform, opacity; }
+.tx--letters { column-gap: 0em; }
+
+.asset-banner {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  background: var(--raw-color-orange-500); color: #fff;
+  font-size: 12px; line-height: 1.4; padding: 0.75rem 1rem; font-family: var(--font-sans);
+}
+.asset-banner p { margin: 0; }
+
+/* ============================================================================
+   THE STICKY STACK
+   ========================================================================= */
+[data-stack] { position: relative; background: var(--surface-black); }
+[data-pin] { position: sticky; top: 0; }
+[data-pin-inner] { transform-origin: center; }
+[data-pin-shade] {
+  position: absolute; inset: 0; background: var(--surface-black);
+  opacity: 0; pointer-events: none; z-index: 40;
+}
+[data-pin-last] { position: relative; z-index: 20; }
+
+/* ============================================================================
+   1 — HERO
+   ========================================================================= */
+[data-hero] {
+  position: relative; isolation: isolate;
+  min-height: 100lvh; overflow: hidden;
+  background: var(--background);
+}
+.hero__canvas, .hero__flat-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  width: 100%; height: 100%; object-fit: cover;
+  transform: translateZ(0); backface-visibility: hidden; will-change: transform;
+}
+.hero__figure { position: absolute; inset: 0; margin: 0 -1.5rem; z-index: 1; pointer-events: none; }
+.hero__fit { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; }
+.hero__flat-person { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; transform: translateX(-50%); }
+@media (min-width: 768px) { .hero__fit { height: calc(100% - 2rem); } }
+@media (min-width: 1024px) { .hero__fit { height: calc(100% - 4rem); } }
+@media (max-width: 1023px) { .hero__figure { top: 30%; } }
+@media (max-width: 639px)  { .hero__figure { top: 36%; } }
+@media (min-width: 1280px) { .hero__figure { display: none; } }
+
+.hero__ramp {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 22%; z-index: 10; pointer-events: none;
+  background-image: linear-gradient(to bottom,
+    color-mix(in srgb, var(--background) 0%, transparent) 0%,
+    color-mix(in srgb, var(--background) 6%, transparent) 26%,
+    color-mix(in srgb, var(--background) 20%, transparent) 46%,
+    color-mix(in srgb, var(--background) 45%, transparent) 64%,
+    color-mix(in srgb, var(--background) 74%, transparent) 80%,
+    color-mix(in srgb, var(--background) 93%, transparent) 91%,
+    var(--background) 100%);
+}
+.hero__ramp2 {
+  position: absolute; left: 0; right: 0; bottom: -13rem; height: 26rem; z-index: 10; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--background) 60%, var(--background));
+}
+@media (min-width: 768px)  { .hero__ramp2 { display: none; } }
+@media (min-width: 1280px) { .hero__ramp { display: none; } }
+
+.hero__content {
+  position: relative; z-index: 20;
+  min-height: 100lvh; display: flex; flex-direction: column;
+  padding: 1.5rem; gap: 0.5rem;
+}
+@media (min-width: 640px)  { .hero__content { padding-left: 2rem; padding-right: 2rem; gap: 1rem; } }
+@media (min-width: 768px)  { .hero__content { gap: 1.5rem; } }
+@media (min-width: 1024px) { .hero__content { gap: 2rem; } }
+@media (max-height: 500px) { .hero__content { padding-top: 0.75rem; padding-bottom: 0.75rem; gap: 1rem; } }
+
+/* ---- masthead ---- */
+.masthead {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 30;
+}
+.masthead__logo img, .sheet__logo img { height: 1.5rem; width: auto; }
+.masthead__nav { position: absolute; left: 50%; transform: translateX(-50%); }
+.masthead__nav ul { display: flex; gap: 4rem; }
+.masthead__nav a, .masthead__garage {
+  font-size: var(--type-label); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--foreground); transition: color var(--duration-fast) var(--ease-entrance);
+}
+.masthead__nav a:hover, .masthead__garage:hover { color: var(--accent); }
+.masthead__garage { font-weight: 700; }
+@media (max-width: 1279px) { .masthead__nav, .masthead__garage { display: none; } }
+.burger { padding: 0.5rem; margin-right: -0.5rem; display: grid; gap: 0.3125rem; }
+.burger span { display: block; width: 1.5rem; height: 1px; background: var(--foreground); }
+@media (min-width: 1280px) { .burger { display: none; } }
+
+/* ---- middle row ---- */
+.hero__middle { display: contents; }
+@media (max-width: 767px) {
+  .masthead { order: 1; }
+  .hero__identity { order: 2; margin-top: auto; }
+  [data-hero-panels] { order: 3; }
+  .hero__actions { order: 4; }
+}
+@media (min-width: 768px) {
+  .hero__middle { display: flex; justify-content: space-between; gap: 2rem; margin-top: auto; }
+}
+@media (min-width: 1280px) {
+  .hero__middle { flex: 1; display: flex; align-items: center; justify-content: space-between; margin-top: 0; }
+}
+
+/* ---- driver identity ---- */
+.hero__identity { position: relative; }
+@media (min-width: 1280px) {
+  .hero__identity { max-width: 26.0625rem; display: flex; flex-direction: column; gap: 6.0625rem; }
+}
+.hero__id {
+  font-size: var(--type-label); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--foreground-muted); margin-bottom: 1rem;
+}
+@media (max-height: 500px) { .hero__id { margin-bottom: 0.25rem; } }
+@media (min-width: 1280px) {
+  .hero__id { position: absolute; left: 20.0625rem; top: 0.5625rem; margin-bottom: 0; }
+}
+.hero__name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--type-display-lg); text-transform: uppercase;
+  line-height: var(--leading-headline);
+  max-width: 6em; justify-content: flex-start; text-align: left;
+}
+@media (max-height: 500px) { .hero__name { font-size: var(--type-heading); } }
+@media (min-width: 768px)  { .hero__name { font-size: var(--type-impact); } }
+@media (min-width: 1024px) { .hero__name { font-size: var(--type-display-lg); } }
+@media (min-width: 1280px) { .hero__name { font-size: var(--type-impact); } }
+.hero__meta { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+@media (max-height: 500px) { .hero__meta { gap: 0.25rem; margin-top: 0.75rem; } }
+@media (min-width: 1280px) { .hero__meta { margin-top: 0; } }
+.hero__meta li { display: flex; align-items: center; gap: 0.5rem; }
+.hero__meta span { font-size: var(--type-lead); text-transform: uppercase; line-height: var(--leading-flat); }
+.hero__meta img { flex: none; }
+.ico-flag { width: 1.125rem; height: 0.75rem; }
+.ico-rookie { width: 1rem; height: 1rem; }
+.ico-merc { width: 0.875rem; height: 0.875rem; }
+
+/* ---- bracket panels ---- */
+[data-hero-panels] { display: flex; flex-direction: column; gap: 2rem; }
+@media (max-width: 639px) { [data-hero-panels] { display: none; } }
+@media (min-width: 768px) { [data-hero-panels] { width: 13.625rem; } }
+.panel { position: relative; padding: 1rem; color: var(--foreground); }
+@media (min-width: 640px) { .panel { padding: 1rem 1.375rem 1.1875rem; } }
+.panel__corner { position: absolute; width: 0.625rem; height: 0.625rem; overflow: visible; }
+.panel__corner--tr { top: 0; right: 0; }
+.panel__corner--tl { top: 0; left: 0; transform: scaleX(-1); }
+.panel__corner--bl { bottom: 0; left: 0; transform: scale(-1); }
+.panel__corner--br { bottom: 0; right: 0; transform: scaleY(-1); }
+.panel__eyebrow {
+  font-size: var(--type-eyebrow); font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--accent);
+}
+.panel__list {
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+  display: flex; flex-direction: column; gap: 0.375rem; margin-top: 1rem;
+}
+.panel__list dt { font-weight: 700; }
+[data-hero-map] { width: 3.125rem; height: 4.875rem; object-fit: contain; object-position: left; }
+@media (min-width: 640px) { [data-hero-map] { width: 4.375rem; height: 6.25rem; object-position: right; } }
+.panel__race { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+@media (min-width: 768px) {
+  .panel__race { display: block; }
+  .panel__race [data-hero-map] { margin-top: 1.75rem; margin-left: auto; }
+}
+[data-hero-stats] { margin-top: 1.5rem; display: flex; justify-content: space-between; width: 10.75rem; }
+@media (min-width: 768px) {
+  [data-hero-stats] { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; width: auto; }
+}
+.stat { text-align: center; }
+@media (min-width: 768px) { .stat { text-align: left; } }
+.stat dt {
+  font-size: var(--type-eyebrow); text-transform: uppercase;
+  letter-spacing: var(--raw-tracking-label); white-space: nowrap;
+}
+.stat dd {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: var(--type-heading); line-height: var(--leading-cap);
+  letter-spacing: var(--raw-tracking-stat);
+}
+.stat dd .tx { justify-content: center; }
+@media (min-width: 768px) { .stat dd .tx { justify-content: flex-start; } }
+
+/* ---- actions row ---- */
+.hero__actions { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 1rem; }
+@media (min-width: 640px) {
+  .hero__actions { margin-top: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 2rem; }
+}
+.trailer { display: flex; align-items: center; gap: 0.75rem; }
+.trailer img { width: 2rem; height: 2rem; }
+.trailer__lines {
+  display: flex; flex-direction: column; gap: 0.375rem;
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+}
+.trailer__lines b { font-weight: 500; transition: color var(--duration-fast) var(--ease-entrance); }
+.trailer:hover .trailer__lines b { color: var(--accent); }
+.trailer__lines time { color: var(--foreground-muted); }
+.socials {
+  display: flex; gap: 2rem; justify-content: flex-end;
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+}
+@media (min-width: 1280px) { .socials { gap: 3.6875rem; } }
+.socials a { transition: color var(--duration-fast) var(--ease-entrance); }
+.socials a:hover { color: var(--accent); }
+@media (max-width: 639px) { .trailer, .socials { display: none; } }
+
+/* ---- profile CTA: a 220x50 frame measured in em off its own 20px label ---- */
+.cta {
+  position: relative; font-size: var(--type-title);
+  display: flex; align-items: center; justify-content: center; gap: 1.6em;
+  width: 100%; height: 3.5rem;
+}
+@media (min-width: 640px) { .cta { height: 2.5em; width: 11em; } }
+.cta__frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cta__flood { transform-origin: left; transform: scaleX(0); transition: transform var(--duration-normal) var(--ease-plate); }
+.cta:hover .cta__flood { transform: scaleX(1); }
+.cta__label {
+  position: relative; text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--accent); transition: color var(--duration-normal) var(--ease-plate);
+}
+.cta:hover .cta__label { color: var(--surface-black); }
+.cta__arrow {
+  position: relative; width: 0.65em; height: 0.5em; overflow: visible;
+  transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.cta__arrow path { stroke: var(--accent); transition: stroke var(--duration-normal) var(--ease-plate); }
+.cta:hover .cta__arrow { transform: translateX(0.25rem); }
+.cta:hover .cta__arrow path { stroke: var(--surface-black); }
+
+/* ============================================================================
+   THE LOADING VEIL + THE SHEET
+   ========================================================================= */
+.veil {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--background);
+}
+.veil__inner { display: flex; flex-direction: column; align-items: center; }
+.veil__helmet {
+  position: relative; width: 7.2rem; height: 8.5rem;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+}
+.veil__shell { position: absolute; inset: 0; background: var(--foreground); opacity: 0.12; }
+.veil__fill { position: absolute; inset: 0; background: var(--foreground); transform-origin: top; transform: scaleY(0); }
+.veil__name {
+  margin-top: 1.75rem; font-size: var(--type-lead); text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: 0.18em;
+}
+.veil__meter { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--border-muted); }
+.veil__meter i { display: block; height: 100%; background: var(--foreground); transform-origin: left; transform: scaleX(0); }
+
+.sheet {
+  position: fixed; inset: 0; z-index: 50; background: var(--background);
+  padding: 1.5rem 2rem; display: flex; flex-direction: column;
+}
+.sheet__top { display: flex; align-items: center; justify-content: space-between; }
+.sheet__close { position: relative; width: 1.5rem; height: 1.5rem; }
+.sheet__close span { position: absolute; left: 0; top: 50%; width: 1.5rem; height: 1px; background: var(--foreground); }
+.sheet__close span:first-child { transform: rotate(45deg); }
+.sheet__close span:last-child { transform: rotate(-45deg); }
+.sheet__nav { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+@media (min-width: 640px) { .sheet__nav { gap: 1.5rem; } }
+.sheet__nav a {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--type-heading);
+  text-transform: uppercase; line-height: var(--leading-headline);
+  transition: color var(--duration-fast) var(--ease-entrance);
+}
+@media (min-width: 640px) { .sheet__nav a { font-size: var(--type-display); } }
+.sheet__nav a:hover { color: var(--accent); }
+
+/* ============================================================================
+   2 — THE SEASON SO FAR
+   ========================================================================= */
+[data-season] {
+  container-type: inline-size; position: relative; isolation: isolate;
+  min-height: var(--season-h, 100lvh); overflow: hidden;
+  background: var(--surface-black); color: var(--foreground-on-dark);
+  --season-gutter: 1.5rem;
+}
+@media (min-width: 640px) { [data-season] { --season-gutter: max(2.2222cqw, var(--gutter-min, 0px)); } }
+@media (max-width: 1023px) {
+  [data-season] {
+    --gutter-min: 32px; --type-min: 13px; --copy-min-size: 17px; --copy-min-w: 15rem;
+    --head-min: 6.6667cqw; --plate-w: 277px; --plate-h: 78px; --plate-cell: 83px;
+    --plate-badge-gap: 11px; --plate-globe-w: 37px; --plate-globe-h: 23px;
+    --plate-stats-left: 16px; --plate-stats-gap: 8px; --plate-eyebrow: 12px; --plate-body: 14px;
+  }
+}
+@media (max-width: 639px) { [data-season] { --head-min: 40px; --head-air: 20px; --season-h: 680px; } }
+
+.season__frame {
+  position: absolute; inset: 0; overflow: hidden; z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
+}
+@media (max-width: 1023px) { .season__frame { -webkit-mask-image: none; mask-image: none; } }
+.season__stage { position: absolute; left: 0; top: 0; width: 1440px; height: 800px; transform-origin: top left; }
+.season__mapbox { position: absolute; left: 0; top: -4.559px; width: 1438.43px; height: 809.11px; }
+.season__mapbox canvas, .season__map-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.season__trace { position: absolute; left: 0; top: 0; width: 1440px; height: 800px; }
+
+.season__seam { position: absolute; left: 0; right: 0; top: 0; height: 34svh; pointer-events: none; z-index: 10; width: 100%; }
+@media (max-width: 639px) { .season__seam { z-index: 0; } }
+
+.season__copy {
+  position: relative; z-index: 20;
+  min-height: var(--season-h, 100lvh); display: flex; flex-direction: column;
+  justify-content: space-between; gap: 4rem;
+  padding: 4.8611cqw var(--season-gutter) var(--season-gutter);
+}
+.season__head {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--accent);
+  font-size: max(3.8194cqw, var(--head-min, 0px));
+}
+.season__rule {
+  width: 1.6667cqw; height: 0.1389cqw; background: var(--accent);
+  margin-top: max(1.9444cqw, var(--head-air, 0px)); transform-origin: left;
+}
+.season__intro {
+  text-transform: uppercase; line-height: var(--leading-display);
+  margin-top: max(2.0833cqw, var(--head-air, 0px));
+  width: max(16.1111cqw, var(--copy-min-w, 0px));
+  font-size: max(1.25cqw, var(--copy-min-size, 0px));
+}
+.season__plate {
+  align-self: flex-end; position: relative;
+  width: var(--plate-w, 19.2361cqw); height: var(--plate-h, 5.4167cqw);
+  display: grid; grid-template-columns: var(--plate-cell, 5.7639cqw) 1fr;
+}
+.season__plate-frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.plate__badge {
+  position: relative; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: var(--plate-badge-gap, 0.7639cqw);
+}
+.plate__globe { width: var(--plate-globe-w, 2.5694cqw); height: var(--plate-globe-h, 1.5972cqw); overflow: visible; }
+.plate__wordmark {
+  display: flex; gap: 0.3em;
+  font-size: var(--plate-eyebrow, max(0.8333cqw, var(--type-min, 0px)));
+  line-height: var(--leading-cap); letter-spacing: var(--raw-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.plate__wordmark [data-plate-year] { color: var(--accent); }
+.plate__stats {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  padding-left: var(--plate-stats-left, 1.1111cqw); gap: var(--plate-stats-gap, 0.5556cqw);
+  text-transform: uppercase; line-height: var(--leading-cap);
+  font-size: var(--plate-body, max(0.9722cqw, var(--type-min, 0px)));
+}
+.plate__stats > div { display: flex; gap: 0.35em; }
+.plate__stats dt { color: var(--accent); }
+.plate__stats dd { flex: 1; white-space: nowrap; }
+
+/* ============================================================================
+   3 — THE TIMELINE
+   ========================================================================= */
+[data-timeline] {
+  container-type: inline-size; position: relative; isolation: isolate; width: 100%;
+  background: var(--surface-black); color: var(--foreground-on-dark);
+  padding-bottom: var(--bottom-pad);
+  --gutter: max(2.2222cqw, var(--gutter-min, 0px));
+  --bottom-pad: 10.4167cqw;
+  --top-pad: 11.7361cqw;
+  --rail-top: 0px;
+}
+@media (max-width: 1023px) {
+  [data-timeline] {
+    overflow-x: clip;
+    --copy-min-size: 17px; --head-min: 6.6667cqw; --head-w-min: 82cqw;
+    --year-min: 30px; --copy-min-w: 200px;
+    --rail-top: calc(11.7361cqw + var(--top-pad-extra, 0px));
+    --bottom-pad: 5cqw;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  [data-timeline] { --top-pad-extra: 16cqw; --head-top: var(--bottom-pad); }
+}
+@media (max-width: 639px) {
+  [data-timeline] { --head-min: 40px; --top-pad-extra: 15cqw; --copy-min-w: 320px; --gutter-min: 24px; }
+}
+@media (min-width: 640px) { [data-timeline] { --copy-max-w: 26.9444cqw; } }
+
+.tl__seam { position: absolute; left: 0; right: 0; top: 0; height: 34svh; pointer-events: none; z-index: 30; width: 100%; }
+@media (max-width: 639px) { .tl__seam { z-index: 0; } }
+
+.tl__wrapper { position: relative; width: 100%; padding-top: calc(var(--top-pad) + var(--top-pad-extra, 0px)); }
+@media (max-width: 639px) { .tl__wrapper { display: flex; flex-direction: column; gap: 2.5rem; padding: calc(var(--top-pad) + var(--top-pad-extra, 0px)) var(--gutter) 0; } }
+
+.tl__head {
+  position: absolute; z-index: 20;
+  top: var(--head-top, var(--gutter)); right: var(--gutter);
+  width: max(20.3472cqw, var(--head-w-min, 0px));
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--accent);
+  font-size: max(3.8194cqw, var(--head-min, 0px));
+  display: flex; flex-direction: column; align-items: flex-end; text-align: right;
+}
+@media (max-width: 1023px) { .tl__head { align-items: center; text-align: center; } }
+@media (max-width: 639px) {
+  .tl__head { left: var(--gutter); right: auto; flex-direction: row; gap: 0.28em; align-items: flex-start; text-align: left; }
+}
+.tl__head .tx { justify-content: flex-end; }
+@media (max-width: 1023px) { .tl__head .tx { justify-content: center; } }
+@media (max-width: 639px) { .tl__head .tx { justify-content: flex-start; } }
+
+.tl__rail {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  z-index: 10; width: 1.1111cqw; top: var(--rail-top);
+}
+@media (max-width: 639px) { .tl__rail { display: none; } }
+.tl__rail-svg { width: 100%; height: 100%; overflow: visible; }
+
+.tl__rows { position: relative; }
+.tl__row { position: relative; width: 100%; transition: opacity var(--duration-plate) var(--ease-plate); }
+[data-timeline].is-dimmed .tl__row { opacity: 0.3; }
+[data-timeline].is-dimmed .tl__row.is-lit { opacity: 1; }
+.tl__layer { position: absolute; inset: 0; }
+.tl__plate {
+  position: absolute; top: 0; bottom: 0; overflow: hidden;
+}
+.tl__plate--centre { left: 50%; transform: translateX(-50%); }
+.tl__plate--left { left: var(--gutter); }
+.tl__plate--right { right: var(--gutter); }
+.tl__clipdef { position: absolute; width: 0; height: 0; }
+.tl__fill {
+  position: absolute; inset: 0; overflow: hidden; background: var(--timeline-fill);
+  transition: inset var(--duration-plate) var(--ease-plate);
+}
+.tl__plate:hover .tl__fill { inset: 5%; }
+.tl__slot { position: absolute; left: 0; right: 0; top: 0; height: 100%; }
+.tl__slot img { width: 100%; height: 110%; object-fit: cover; object-position: top; }
+.tl__outline { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.tl__year {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  z-index: 20; pointer-events: none;
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--accent);
+  font-size: max(2.5cqw, var(--year-min, 0px));
+}
+.tl__layer--copy { z-index: 20; }
+.tl__copy {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 20; pointer-events: none;
+  text-transform: uppercase; line-height: var(--leading-display);
+  color: var(--foreground-on-dark);
+  width: min(max(var(--copy-w), var(--copy-min-w, 0px)), var(--copy-max-w, 100vw));
+  font-size: max(1.25cqw, var(--copy-min-size, 0px));
+}
+.tl__copy b { font-weight: 700; }
+@media (max-width: 639px) {
+  .tl__row { height: auto !important; display: flex; flex-direction: column; gap: 0.75rem; }
+  .tl__layer { position: relative; inset: auto; top: 0 !important; }
+  .tl__plate { position: relative; width: 82% !important; aspect-ratio: 710 / 462; top: auto; bottom: auto; left: auto; right: auto; transform: none; margin-right: auto; }
+  .tl__plate--alt { margin-right: 0; margin-left: auto; }
+  .tl__year { position: relative; height: 0; width: 82%; top: -28.8cqw; left: auto; transform: none; text-align: center; }
+  .tl__copy { position: relative; top: auto; left: auto !important; transform: none; }
+}
+
+/* ============================================================================
+   4 — FROM THE PADDOCK
+   ========================================================================= */
+[data-paddock] {
+  container-type: inline-size; position: relative; isolation: isolate;
+  min-height: var(--block-h, 100lvh); width: 100%; overflow: hidden;
+  background: var(--background); color: var(--foreground);
+  --u: var(--panel-u, calc(100cqw / 1440));
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  [data-paddock] {
+    --type-min: 13px; --copy-min-size: 17px; --fig-cap: 118.75cqw; --fig-x-override: 65.7%;
+    --cta-h: 50px; --band-scale: 1.75; --cal-spread: 1.75; --cal-mark-drop: 8cqw;
+    --cal-card-drop: 1.3cqw; --panel-u: 1px; --intro-min-w: 280px;
+    --bracket-drop: 1.7cqw; --bracket-stretch: 5.9cqw;
+  }
+}
+@media (max-width: 639px) {
+  [data-paddock] {
+    --block-h: 1062px; --intro-bottom: 139px; --head-left: 24px; --intro-left: 24px;
+    --head-top: 24px; --intro-min-w: 320px; --intro-gap: 24px; --band-fade: 60px;
+    --cta-h: 50px; --panel-u: 1px; --fig-cap: 599px; --fig-x-override: 48.5%;
+    --fig-lift: 328px; --band-scale: 8.48; --cal-card-w: 100%; --head-min: 40px;
+    --type-min: 13px; --copy-min-size: 15px;
+  }
+}
+.pd__contours { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+.pd__band {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: calc(11.7361cqw * var(--band-scale, 1)); background: var(--surface-black);
+}
+.pd__figure { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+.pd__figure img {
+  position: absolute; bottom: var(--fig-lift, 0px);
+  left: var(--fig-x-override, 65.6917%); transform: translateX(-50%);
+  height: min(calc(102.0363% * var(--fig-fit, 1)), var(--fig-cap, 100000px));
+  width: auto; aspect-ratio: 1.15881; object-fit: cover; user-select: none;
+}
+.pd__melt {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 10;
+  height: calc(11.7361cqw * var(--band-scale, 1));
+  background: linear-gradient(to bottom, rgb(9 10 11 / 0) 0%, var(--surface-black) var(--band-fade, 38.685%));
+}
+.pd__seam { position: absolute; left: 0; right: 0; top: 0; height: 34svh; pointer-events: none; z-index: 30; width: 100%; }
+@media (max-width: 639px) { .pd__seam { z-index: 0; } }
+
+.pd__head {
+  position: absolute; z-index: 20;
+  left: var(--head-left, 2.2222cqw); top: var(--head-top, 2.2222cqw);
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--foreground);
+  font-size: max(max(6.6667cqw, var(--type-min, 0px)), var(--head-min, 0px));
+}
+.pd__intro {
+  position: absolute; z-index: 20; display: flex; flex-direction: column;
+  left: var(--intro-left, 2.2222cqw);
+  bottom: var(--intro-bottom, calc(11.7361cqw * var(--band-scale, 1) + 2.2222cqw));
+  width: max(23.4722cqw, var(--intro-min-w, 0px));
+  gap: var(--intro-gap, 2.7778cqw);
+}
+.pd__report {
+  text-transform: uppercase; line-height: var(--leading-display);
+  font-size: max(1.25cqw, var(--copy-min-size, 0px));
+}
+@media (max-width: 639px) { .pd__report { color: var(--foreground-on-dark); } }
+
+/* the button: every length a ratio of its height */
+.pd__cta {
+  position: relative; align-self: flex-start;
+  --cta-h: 3.4722cqw;
+  height: var(--cta-h); width: calc(var(--cta-h) * 4.34);
+}
+.pd__cta svg.frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pd__cta .flood { transform-origin: left; transform: scaleX(0); transition: transform var(--duration-normal) var(--ease-plate); }
+.pd__cta:hover .flood { transform: scaleX(1); }
+.pd__cta-inner {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--cta-h) * 24 / 50);
+  display: flex; align-items: center; gap: calc(var(--cta-h) * 32 / 50);
+  font-size: calc(var(--cta-h) * 20 / 50); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--accent); transition: color var(--duration-normal) var(--ease-plate);
+}
+.pd__cta:hover .pd__cta-inner { color: var(--surface-black); }
+.pd__cta-arrow {
+  width: calc(var(--cta-h) * 13.71 / 50); height: calc(var(--cta-h) * 10.71 / 50);
+  overflow: visible; transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.pd__cta-arrow path { stroke: currentColor; }
+.pd__cta:hover .pd__cta-arrow { transform: translateX(0.25rem); }
+
+/* the two panels */
+.pd__panel { position: absolute; z-index: 20; }
+.bracket { position: absolute; width: calc(var(--u) * 10.5); height: calc(var(--u) * 10.5); overflow: visible; transition: left var(--duration-plate) var(--ease-plate), top var(--duration-plate) var(--ease-plate); }
+.bracket--tl { left: calc(-1 * var(--bracket-spread, 0px)); top: calc(-1 * var(--bracket-spread, 0px)); }
+.bracket--tr { right: calc(-1 * var(--bracket-spread, 0px)); top: calc(-1 * var(--bracket-spread, 0px)); }
+.bracket--br { right: calc(-1 * var(--bracket-spread, 0px)); bottom: calc(-1 * var(--bracket-spread, 0px) + -1 * var(--bracket-stretch, 0px)); }
+.bracket--bl { left: calc(-1 * var(--bracket-spread, 0px)); bottom: calc(-1 * var(--bracket-spread, 0px) + -1 * var(--bracket-stretch, 0px)); }
+.pd__meet-frame {
+  left: var(--meet-frame-left, calc(100% - 2.2222cqw - var(--u) * 218)); top: var(--meet-frame-top, calc(var(--u) * 32));
+  right: var(--meet-frame-right, 2.2222cqw); height: calc(var(--u) * 73 + var(--bracket-stretch, 0px));
+}
+.pd__stats-frame {
+  left: var(--stats-frame-left, calc(100% - 2.2222cqw - var(--u) * 218)); top: calc(var(--u) * 137 + var(--stats-frame-drop, 0px));
+  right: var(--stats-frame-right, 2.2222cqw); height: calc(var(--u) * 398);
+}
+.pd__col {
+  position: absolute; z-index: 21; display: flex; flex-direction: column;
+  width: calc(var(--u) * 193);
+}
+.pd__meet {
+  left: var(--meet-left, calc(100% - 2.2222cqw - var(--u) * 205)); top: var(--meet-top, calc(var(--u) * 43));
+  gap: calc(var(--u) * 6); font-size: calc(var(--u) * 14);
+  text-transform: uppercase; line-height: var(--leading-flat);
+}
+.pd__meet b { font-weight: 700; }
+.pd__stats {
+  left: var(--stats-left, calc(100% - 2.2222cqw - var(--u) * 205));
+  top: calc(var(--u) * 147 + var(--stats-drop, 0px));
+  width: var(--stats-col-w, calc(var(--u) * 193));
+}
+.pd__stat-row { display: flex; align-items: flex-end; gap: calc(var(--u) * 24); height: calc(var(--u) * 58); }
+.pd__stat-row img { width: calc(var(--u) * 31); height: auto; }
+.pd__stat-row dt {
+  font-size: calc(var(--u) * 12); text-transform: uppercase;
+  letter-spacing: calc(var(--u) * -0.48); color: var(--foreground-muted);
+}
+.pd__stat-row dd {
+  font-family: var(--font-display); font-weight: 500; font-size: calc(var(--u) * 38);
+  line-height: var(--leading-cap); letter-spacing: calc(var(--u) * -3.04);
+}
+.pd__rule {
+  height: 1px; background: var(--foreground-muted); transform-origin: left;
+  margin: var(--stats-rule-top, calc(var(--u) * 24)) 0 var(--stats-rule-bottom, calc(var(--u) * 23));
+}
+@media (max-width: 639px) { .pd__panel, .pd__col { display: none; } }
+
+/* the calendar strip */
+.cal {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
+  height: calc(11.7361cqw * var(--band-scale, 1));
+}
+.cal__link { position: absolute; height: 1px; display: block; transform-origin: left; background-repeat: repeat-x; }
+.cal__card {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  text-transform: uppercase; gap: max(0.8333cqw, var(--type-min, 0px)); text-align: center;
+}
+.cal__no {
+  font-size: max(0.8333cqw, var(--type-min, 0px)); letter-spacing: -0.0167cqw;
+  color: var(--foreground-on-dark-muted);
+}
+.cal__name {
+  font-family: var(--font-display); font-weight: 700; line-height: var(--leading-headline);
+  color: var(--foreground-on-dark);
+  font-size: max(max(1.25cqw, var(--type-min, 0px)), var(--copy-min-size, 0px));
+  white-space: nowrap;
+}
+.cal__date {
+  font-size: max(0.9722cqw, var(--type-min, 0px)); letter-spacing: -0.0194cqw;
+  color: var(--foreground-on-dark-muted);
+}
+.cal__card.is-live .cal__no, .cal__card.is-live .cal__date { color: var(--accent); }
+.cal__marker { position: absolute; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; }
+.cal__marker--result {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: max(0.8333cqw, var(--type-min, 0px)); color: var(--foreground-on-dark);
+}
+.cal__dot { width: 0.7639cqw; height: 0.7639cqw; overflow: visible; }
+.cal__live { position: absolute; pointer-events: none; --u: var(--panel-u, calc(100cqw / 1440)); }
+@media (max-width: 639px) {
+  .cal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem 1.25rem; padding: 1.5rem 4%; height: auto; border-top: 1px solid rgb(255 255 255 / 0.15); }
+  .cal__link, .cal__marker, .cal__live { display: none; }
+  .cal__card { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; }
+  .cal__card:nth-child(-n+4) { display: none; }
+}
+
+/* ============================================================================
+   5 — KEEP PUSHING FORWARD (the footer)
+   ========================================================================= */
+[data-footer] {
+  container-type: inline-size; position: relative; isolation: isolate;
+  min-height: var(--foot-h, 100lvh); width: 100%; overflow: hidden;
+  background: var(--accent);
+  --foot-gutter: 2.2222cqw;
+}
+@media (max-width: 1023px) {
+  [data-footer] { --type-min: 13px; --foot-bottom-min: 5cqw; --head-min: 6.6667cqw; --head-w-min: 44cqw; --foot-head-min: 6.6667cqw; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  [data-footer] {
+    --foot-h: 104cqw; --fig-scale: 0.87; --fig-shift: 3%; --logo-w: 106px; --logo-h: 24px;
+    --nav-size: 36px; --nav-gap: 12px; --nav-row: 34px; --cta-left: 50%; --cta-shift: -50%;
+    --foot-copy-min: 200px; --cta-h: 50px;
+  }
+}
+@media (max-width: 639px) {
+  [data-footer] {
+    --foot-gutter: 24px; --foot-h: 680px; --nav-mid: 282px; --cta-bottom: 73px;
+    --social-bottom: 151px; --social-left: 24px; --social-right: auto; --social-min-w: auto;
+    --logo-w: 106px; --logo-h: 24px; --nav-size: 30px; --nav-gap: 18px; --nav-row: auto;
+    --nav-w: calc(100cqw - 48px); --cta-left: 24px; --cta-w: calc(100cqw - 48px);
+    --foot-head-left: 24px; --foot-head-right: auto; --foot-head-top: 78px; --cta-h: 50px;
+    --foot-copy-min: 212px; --foot-head-min: 40px; --head-w-min: 240px;
+  }
+}
+.ft__panel {
+  position: absolute; inset: 1.1111cqw; overflow: hidden;
+  background: var(--surface-black); color: var(--foreground-on-dark);
+}
+.ft__contours { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ft__figure {
+  position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  transform-origin: bottom; scale: var(--fig-scale, 1); translate: var(--fig-shift, 0);
+}
+@media (max-width: 639px) { .ft__figure { display: none; } }
+.ft__figure-layer { position: absolute; inset: 0; }
+.ft__body {
+  position: absolute; z-index: 10; left: 50%; bottom: -1.225%; height: 96.078%;
+  aspect-ratio: 1.15902; transform: translateX(-50%); object-fit: cover; width: auto;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 69%, black 72%);
+  mask-image: linear-gradient(to bottom, transparent 69%, black 72%);
+}
+.ft__helmet {
+  position: absolute; z-index: 11; left: 50%; top: 1.25%; height: 83.364%;
+  aspect-ratio: 1.5; transform: translateX(-50%); width: auto;
+}
+.ft__logo {
+  position: absolute; z-index: 20; left: var(--foot-gutter); top: var(--foot-gutter);
+  width: var(--logo-w, 7.3611cqw); height: var(--logo-h, 1.6667cqw);
+  background: var(--accent);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.ft__head {
+  position: absolute; z-index: 20;
+  top: var(--foot-head-top, var(--foot-gutter));
+  right: var(--foot-head-right, var(--foot-gutter));
+  left: var(--foot-head-left, auto);
+  width: max(25.6944cqw, var(--head-w-min, 0px));
+  font-size: max(3.8194cqw, var(--foot-head-min, 0px));
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--accent);
+  display: flex; flex-direction: column; align-items: flex-end;
+}
+.ft__head .tx { justify-content: flex-end; }
+@media (max-width: 639px) { .ft__head { display: none; } }
+.ft__nav {
+  position: absolute; z-index: 20; left: 0; margin-left: var(--foot-gutter);
+  top: var(--nav-mid, 50%); transform: translateY(-50%);
+  width: var(--nav-w, 10.9722cqw); gap: var(--nav-gap, max(0.8333cqw, var(--type-min, 0px)));
+  font-size: var(--nav-size, max(2.5cqw, var(--type-min, 0px)));
+  display: flex; flex-direction: column;
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  line-height: var(--leading-headline); color: var(--foreground-on-dark);
+}
+.ft__nav a {
+  display: block; width: max-content; height: var(--nav-row, max(2.3611cqw, var(--type-min, 0px)));
+  transition: color var(--duration-fast) var(--ease-entrance);
+}
+.ft__nav a:hover { color: var(--accent); }
+@media (max-width: 639px) {
+  .ft__nav a { width: 100%; border-bottom: 1px solid rgb(255 255 255 / 0.15); padding-bottom: 0.5rem; }
+}
+.ft__foot { position: absolute; z-index: 20; bottom: max(2.2222cqw, var(--foot-bottom-min, 0px)); }
+.ft__copy {
+  left: var(--foot-gutter); width: max(15.2778cqw, var(--foot-copy-min, 0px));
+  font-size: max(0.9722cqw, var(--type-min, 0px));
+  text-transform: uppercase; line-height: var(--leading-display);
+  color: var(--foreground-on-dark-faint);
+}
+.ft__cta {
+  left: var(--cta-left, 40.4861cqw); transform: translateX(var(--cta-shift, 0));
+  --cta-h: 3.4722cqw;
+  height: var(--cta-h); width: var(--cta-w, calc(var(--cta-h) * 5.5)); position: absolute;
+}
+.ft__cta svg.frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ft__cta .flood { transform-origin: left; transform: scaleX(0); transition: transform var(--duration-normal) var(--ease-plate); }
+.ft__cta:hover .flood { transform: scaleX(1); }
+.ft__cta-inner {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--cta-h) * 24 / 50);
+  display: flex; align-items: center; gap: calc(var(--cta-h) * 32 / 50);
+  font-size: calc(var(--cta-h) * 20 / 50); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--accent); transition: color var(--duration-normal) var(--ease-plate);
+}
+.ft__cta:hover .ft__cta-inner { color: var(--surface-black); }
+.ft__cta-arrow {
+  width: calc(var(--cta-h) * 13.71 / 50); height: calc(var(--cta-h) * 10.71 / 50);
+  overflow: visible; transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.ft__cta-arrow path { stroke: currentColor; }
+.ft__cta:hover .ft__cta-arrow { transform: translateX(0.25rem); }
+.ft__social {
+  right: var(--social-right, var(--foot-gutter)); left: var(--social-left, auto);
+  bottom: var(--social-bottom, max(2.2222cqw, var(--foot-bottom-min, 0px)));
+  width: max(14.3056cqw, var(--social-min-w, 0px));
+  font-size: max(0.9722cqw, var(--type-min, 0px));
+  display: flex; justify-content: space-between; text-transform: uppercase;
+  color: var(--foreground-on-dark);
+}
+.ft__social a { transition: color var(--duration-fast) var(--ease-entrance); }
+.ft__social a:hover { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     THE STICKY STACK — hero (z0) and season (z10) pin and are covered;
+     the timeline (relative, z20) covers but is never covered.
+     ======================================================================= -->
+<div data-stack>
+
+  <!-- ---------------------------------------------------------------- HERO -->
+  <div data-pin style="z-index:0">
+    <div data-pin-inner>
+      <section data-hero id="hero" aria-label="Kimi Antonelli">
+        <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
+        <div class="hero__figure" aria-hidden="true"><div class="hero__fit" data-hero-fitbox></div></div>
+        <div class="hero__ramp" aria-hidden="true"></div>
+        <div class="hero__ramp2" aria-hidden="true"></div>
+
+        <div class="hero__content">
+          <header class="masthead" data-reveal="masthead">
+            <a class="masthead__logo" href="/" aria-label="Grido1 Racing Systems">
+              <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/grido1-logo.webp" width="424" height="97" alt="" fetchpriority="high">
+            </a>
+            <nav class="masthead__nav" aria-label="Primary">
+              <ul>
+                <li><a href="/driver">Driver</a></li>
+                <li><a href="/season">SEASON</a></li>
+                <li><a href="/journal">journal</a></li>
+                <li><a href="/next-race">next race</a></li>
+                <li><a href="/store">store</a></li>
+              </ul>
+            </nav>
+            <a class="masthead__garage" href="/garage"><span aria-hidden="true">[ </span>Garage<span aria-hidden="true"> &rarr; ]</span></a>
+            <button class="burger" type="button" data-burger aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+          </header>
+
+          <div class="hero__middle">
+            <div class="hero__identity">
+              <div>
+                <p class="hero__id" data-reveal="id">driver_012</p>
+                <h1 class="hero__name" data-hero-name>kimi antonelli</h1>
+              </div>
+              <ul class="hero__meta">
+                <li data-reveal="meta"><img class="ico-flag" src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/flag-italy.webp" width="18" height="12" alt="Italy"><span>Italy</span></li>
+                <li data-reveal="meta"><img class="ico-rookie" src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/icon-rookie.svg" width="16" height="16" alt="" aria-hidden="true"><span>rookie season_2026</span></li>
+                <li data-reveal="meta"><img class="ico-merc" src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/mercedes-logo.webp" width="14" height="14" alt="" aria-hidden="true"><span>Mercedes-AMG F1 Team</span></li>
+              </ul>
+            </div>
+
+            <div data-hero-panels data-reveal="panels">
+              <section class="panel" data-brackets aria-label="Next race">
+                <p class="panel__eyebrow">next race</p>
+                <div class="panel__race">
+                  <dl class="panel__list">
+                    <dt>belgian gp</dt>
+                    <dd>spa-francorchamps</dd>
+                    <dd><time datetime="2026-07-27">27 jul 2026</time></dd>
+                  </dl>
+                  <img data-hero-map src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/circuit-spa.webp" width="312" height="199" alt="Spa-Francorchamps circuit layout" loading="lazy">
+                </div>
+              </section>
+              <section class="panel" data-brackets aria-label="Season stats">
+                <p class="panel__eyebrow">Season stats</p>
+                <dl data-hero-stats>
+                  <div class="stat"><dt>Races</dt><dd data-hero-figure-text>12</dd></div>
+                  <div class="stat"><dt>Podiums</dt><dd data-hero-figure-text>3</dd></div>
+                  <div class="stat"><dt>Points</dt><dd data-hero-figure-text>118</dd></div>
+                </dl>
+              </section>
+            </div>
+          </div>
+
+          <div class="hero__actions" data-reveal="actions">
+            <a class="trailer" href="/trailer">
+              <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/hero/ui/play-button.svg" width="32" height="32" alt="" aria-hidden="true" loading="lazy">
+              <span class="trailer__lines"><b>watch trailer</b><time datetime="PT1M26S">01:26</time></span>
+            </a>
+            <a class="cta" href="/driver/kimi-antonelli">
+              <svg class="cta__frame" viewBox="0 0 220 50" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M220 42L212.932 50H0V0H220V42Z" fill="#0E0F14"/>
+                <path class="cta__flood" d="M220 42L212.932 50H0V0H220V42Z" fill="var(--accent)"/>
+                <path d="M220 42L212.932 50H0V0H220V42Z" fill="none" stroke="var(--accent)" stroke-opacity="0.25"/>
+                <g fill="none" stroke="var(--accent)">
+                  <path d="M205 49.5H213L219.5 42V36"/><path d="M212 0.5H219.5V7"/>
+                  <path d="M8 0.5H0.5V7"/><path d="M7.5 49.5H0.5V42.5"/>
+                </g>
+              </svg>
+              <span class="cta__label">view profile</span>
+              <svg class="cta__arrow" viewBox="0 0 13.7071 10.7071" fill="none" aria-hidden="true" focusable="false">
+                <path d="M0 5.35355H13M8 10.3536L13 5.35355L8 0.353553"/>
+              </svg>
+            </a>
+            <nav class="socials" aria-label="Social">
+              <a href="https://instagram.com" rel="noreferrer noopener">inst</a>
+              <a href="https://x.com" rel="noreferrer noopener">x</a>
+              <a href="https://youtube.com" rel="noreferrer noopener">youtube</a>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pin-shade></div>
+  </div>
+
+  <!-- -------------------------------------------------------------- SEASON -->
+  <div data-pin style="z-index:10">
+    <div data-pin-inner>
+      <section data-season id="season" aria-label="The season so far">
+        <div class="season__frame" data-season-frame aria-hidden="true">
+          <div class="season__stage" data-season-stage>
+            <div class="season__mapbox" data-season-map><canvas data-season-dots></canvas></div>
+            <canvas class="season__trace" data-season-trace></canvas>
+          </div>
+        </div>
+        <canvas class="season__seam" data-season-seam aria-hidden="true"></canvas>
+
+        <div class="season__copy">
+          <div>
+            <h2 class="season__head" data-season-head></h2>
+            <div class="season__rule" data-season-rule aria-hidden="true"></div>
+            <p class="season__intro" data-season-intro>Every race is a step forward. Here&rsquo;s how the season is shaping up.</p>
+          </div>
+
+          <div class="season__plate" data-season-plate>
+            <svg class="season__plate-frame" viewBox="0 0 277 78" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0.5 0.5H276.5V69L268 77.5H0.5Z" fill="var(--surface-black)" stroke="var(--accent)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+              <line x1="83" y1="0.5" x2="83" y2="77.5" stroke="var(--accent)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <div class="plate__badge">
+              <svg class="plate__globe" viewBox="0 0 37 23" fill="none" aria-hidden="true">
+                <ellipse cx="18.5" cy="11.5" rx="18" ry="11" stroke="var(--accent)" stroke-width="1"/>
+                <line x1="0.5" y1="11.5" x2="36.5" y2="11.5" stroke="var(--accent)" stroke-width="1"/>
+                <ellipse data-plate-meridian cx="18.5" cy="11.5" rx="18" ry="11" stroke="var(--accent)" stroke-width="1"/>
+              </svg>
+              <p class="plate__wordmark"><span data-plate-f1>F1</span><span data-plate-year>/ 2026</span></p>
+            </div>
+            <dl class="plate__stats">
+              <div><dt data-plate-figure="0">P1</dt><dd data-plate-wording="0">in the championship</dd></div>
+              <div><dt data-plate-figure="1">6</dt><dd data-plate-wording="1">wins</dd></div>
+              <div><dt data-plate-figure="2">9</dt><dd data-plate-wording="2">podiums.</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pin-shade></div>
+  </div>
+
+  <!-- ------------------------------------------------------------ TIMELINE -->
+  <div data-pin-last>
+    <section data-timeline id="timeline" aria-label="From karts to F1">
+      <canvas class="tl__seam" data-tl-seam aria-hidden="true"></canvas>
+      <div class="tl__wrapper" data-tl-wrapper>
+        <h2 class="tl__head" data-tl-head></h2>
+        <div class="tl__rail" data-tl-rail aria-hidden="true"></div>
+        <div class="tl__rows" data-tl-rows></div>
+      </div>
+    </section>
+  </div>
+
+</div><!-- /stack -->
+
+<!-- ---------------------------------------------------------------- PADDOCK -->
+<section data-paddock id="paddock" aria-label="From the paddock">
+  <canvas class="pd__contours" data-paddock-contours aria-hidden="true"></canvas>
+  <div class="pd__band" aria-hidden="true"></div>
+  <div class="pd__figure" data-paddock-figure aria-hidden="true">
+    <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/paddock/portrait.webp" width="1350" height="1165" alt="Kimi Antonelli in the paddock" loading="lazy" decoding="async">
+  </div>
+  <div class="pd__melt" aria-hidden="true"></div>
+  <canvas class="pd__seam" data-paddock-seam aria-hidden="true"></canvas>
+
+  <h2 class="pd__head" data-paddock-head></h2>
+
+  <div class="pd__intro">
+    <p class="pd__report" data-paddock-report>A composed drive through a difficult weekend secured another podium &mdash; and kept Kimi at the top of the championship.</p>
+    <a class="pd__cta" data-paddock-cta href="/stories/hungarian-gp">
+      <svg class="frame" viewBox="0 0 217 50" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0.5 0.5H216.5V42L209 49.5H0.5Z" fill="var(--surface-black)" stroke="var(--accent)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <path class="flood" d="M0.5 0.5H216.5V42L209 49.5H0.5Z" fill="var(--accent)"/>
+      </svg>
+      <span class="pd__cta-inner">read story
+        <svg class="pd__cta-arrow" viewBox="0 0 13.7071 10.7071" fill="none" aria-hidden="true"><path d="M0 5.35H13M8 10.35L13 5.35L8 0.35"/></svg>
+      </span>
+    </a>
+  </div>
+
+  <div class="pd__panel pd__meet-frame" data-paddock-meet-frame aria-hidden="true"></div>
+  <div class="pd__col pd__meet" data-paddock-meet>
+    <b>hungarian gp</b><span>silverstone</span><span>july 12, 2026</span>
+  </div>
+
+  <div class="pd__panel pd__stats-frame" data-paddock-stats-frame aria-hidden="true"></div>
+  <dl class="pd__col pd__stats">
+    <div class="pd__stat-row" data-stat-row>
+      <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/paddock/icon-flag.svg" alt="" aria-hidden="true" loading="lazy">
+      <div><dt>last result</dt><dd data-stat-figure>P4</dd></div>
+    </div>
+    <span class="pd__rule" aria-hidden="true"></span>
+    <div class="pd__stat-row" data-stat-row>
+      <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/paddock/icon-bars.svg" alt="" aria-hidden="true" loading="lazy">
+      <div><dt>points gained</dt><dd data-stat-figure>+12</dd></div>
+    </div>
+    <span class="pd__rule" aria-hidden="true"></span>
+    <div class="pd__stat-row" data-stat-row>
+      <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/paddock/icon-trophy.svg" alt="" aria-hidden="true" loading="lazy">
+      <div><dt>championship</dt><dd data-stat-figure>P1</dd></div>
+    </div>
+    <span class="pd__rule" aria-hidden="true"></span>
+    <div class="pd__stat-row" data-stat-row>
+      <img src="https://storage.getlayers.ai/assets/lando-04a9449ab2/paddock/icon-gauge.svg" alt="" aria-hidden="true" loading="lazy">
+      <div><dt>points</dt><dd data-stat-figure>118</dd></div>
+    </div>
+  </dl>
+
+  <div class="cal" data-calendar></div>
+</section>
+
+<!-- ----------------------------------------------------------------- FOOTER -->
+<footer data-footer id="footer" aria-label="Keep pushing forward">
+  <div class="ft__panel">
+    <canvas class="ft__contours" data-footer-contours aria-hidden="true"></canvas>
+  </div>
+
+  <div class="ft__figure" aria-hidden="true">
+    <div class="ft__figure-layer" data-footer-figure-layer>
+      <img class="ft__body" src="https://storage.getlayers.ai/assets/lando-04a9449ab2/footer/body.webp" width="1536" height="1024" alt="" loading="lazy" decoding="async">
+      <img class="ft__helmet" src="https://storage.getlayers.ai/assets/lando-04a9449ab2/footer/helmet.webp" width="1536" height="1024" alt="Kimi Antonelli&rsquo;s helmet" loading="lazy" decoding="async">
+    </div>
+  </div>
+
+  <div class="ft__logo" data-footer-logo role="img" aria-label="GRID01 Racing Systems"
+       style="-webkit-mask-image:url(https://storage.getlayers.ai/assets/lando-04a9449ab2/footer/logo-mask.png);mask-image:url(https://storage.getlayers.ai/assets/lando-04a9449ab2/footer/logo-mask.png)"></div>
+
+  <h2 class="ft__head" data-footer-head></h2>
+  <nav class="ft__nav" data-footer-nav aria-label="Footer"></nav>
+
+  <p class="ft__foot ft__copy" data-footer-foot>&copy; 2026 GRID01 Racing Systems. All rights reserved.</p>
+  <a class="ft__foot ft__cta" data-footer-foot href="/legal">
+    <svg class="frame" viewBox="0 0 275 50" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0.5 0.5H274.5V41.165L266.165 49.5H0.5Z" fill="none" stroke="var(--accent)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      <path class="flood" d="M0.5 0.5H274.5V41.165L266.165 49.5H0.5Z" fill="var(--accent)"/>
+    </svg>
+    <span class="ft__cta-inner">legal documents
+      <svg class="ft__cta-arrow" viewBox="0 0 13.7071 10.7071" fill="none" aria-hidden="true"><path d="M0 5.35H13M8 10.35L13 5.35L8 0.35"/></svg>
+    </span>
+  </a>
+  <nav class="ft__foot ft__social" data-footer-foot aria-label="Social">
+    <a href="https://instagram.com" rel="noreferrer noopener">inst</a>
+    <a href="https://x.com" rel="noreferrer noopener">x</a>
+    <a href="https://youtube.com" rel="noreferrer noopener">youtube</a>
+  </nav>
+</footer>
+
+<!-- @BUNDLE --><!-- /@BUNDLE -->
+</body>
+</html>

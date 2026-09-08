@@ -1,0 +1,4 @@
+html { font-size: 16px; }
+@media (max-width: 1920px) { html { font-size: 0.833333vw; } }   /* 16·100/1920 */
+@media (max-width: 1440px) { html { font-size: 1.111111vw; } }   /* 16·100/1440 */
+@media (max-width: 1279px) { html { font-size: 16px; } }

@@ -1,0 +1,6 @@
+driver_012                      ← --type-label, uppercase, color --foreground-muted
+KIMI                            ← h1, Oswald 700, --type-impact (96), uppercase, line-height 0.95
+ANTONELLI
+🇮🇹 ITALY                        ← meta rows: icon + --type-lead label, uppercase, line-height 0.9, gap 0.5rem
+✦ ROOKIE SEASON_2026
+✦ MERCEDES-AMG F1 TEAM

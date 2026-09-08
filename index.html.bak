@@ -1,0 +1,3267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LANDO — GRIDO1 Racing Systems / Kimi Antonelli</title>
+<meta name="description" content="Kimi Antonelli, driver_012 of GRIDO1 Racing Systems. Rookie season, Mercedes-AMG F1.">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
+    "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script>
+  /* Before anything else: the page opens behind a veil and always starts at the top. */
+  history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+</script>
+
+<style>
+/* ============================================================================
+   TOKENS — tier 1 (raw), tier 2 (roles). The only place a literal appears.
+   There is no dark-mode override: the theme is fixed, each block picks a surface.
+   ========================================================================= */
+:root {
+  --raw-color-ice-50: #f7fafb;
+  --raw-color-ice-100: #ebeef1;
+  --raw-color-ice-200: #dfe5e9;
+  --raw-color-steel-400: #b6c1c8;
+  --raw-color-ink-950: #090a0b;
+  --raw-color-ink-900: #0e0f14;
+  --raw-color-ink-800: #1b1d24;
+  --raw-color-ink-700: #2a2d36;
+  --raw-color-ink-alpha-35: rgb(9 10 11 / 0.35);
+  --raw-color-slate-500: #7a7a7a;
+  --raw-color-slate-600: #4d4d4d;
+  --raw-color-slate-900: #1e1e1e;
+  --raw-color-cyan-400: #02d2e3;
+  --raw-color-cyan-alpha-25: rgb(2 210 227 / 0.25);
+  --raw-color-stone-600: #535450;
+  --raw-color-white-alpha-10: rgb(255 255 255 / 0.1);
+  --raw-color-white-alpha-20: rgb(255 255 255 / 0.2);
+  --raw-color-ink-alpha-08: rgb(9 10 11 / 0.08);
+  --raw-color-white-alpha-40: rgb(255 255 255 / 0.4);
+  --raw-color-white: #ffffff;
+  --raw-color-orange-500: #ff6b00;
+
+  --raw-font-size-96: 6rem;
+  --raw-font-size-70: 4.375rem;
+  --raw-font-size-52: 3.25rem;
+  --raw-font-size-38: 2.375rem;
+  --raw-font-size-20: 1.25rem;
+  --raw-font-size-18: 1.125rem;
+  --raw-font-size-16: 1rem;
+  --raw-font-size-14: 0.875rem;
+  --raw-font-size-12: 0.75rem;
+  --raw-font-size-55: 3.4375rem;
+  --raw-font-size-36: 2.25rem;
+
+  --raw-leading-95: 0.95;
+  --raw-leading-90: 0.9;
+  --raw-leading-72: 0.72;
+  --raw-leading-110: 1.1;
+  --raw-tracking-stat: -0.08em;
+  --raw-tracking-label: -0.04em;
+  --raw-tracking-eyebrow: -0.02em;
+
+  --raw-radius-16: 1rem; --raw-radius-48: 3rem; --raw-radius-100: 6.25rem;
+  --raw-duration-fast: 150ms; --raw-duration-normal: 250ms; --raw-duration-slow: 700ms;
+  --raw-edge-fade-share: 10%; --raw-edge-fade-length: 6rem;
+
+  /* tier 2 — roles */
+  --background: var(--raw-color-ice-50);
+  --foreground: var(--raw-color-ink-950);
+  --foreground-muted: var(--raw-color-ink-alpha-35);
+  --surface-dark: var(--raw-color-ink-900);
+  --surface-dark-raised: var(--raw-color-ink-800);
+  --surface-black: var(--raw-color-ink-950);
+  --surface-muted: var(--raw-color-ice-100);
+  --surface-soft: var(--raw-color-ice-200);
+  --foreground-on-dark: var(--raw-color-white);
+  --foreground-on-dark-muted: var(--raw-color-steel-400);
+  --foreground-on-dark-faint: var(--raw-color-white-alpha-40);
+  --border-muted: var(--raw-color-ice-200);
+  --border-on-dark: var(--raw-color-ink-700);
+  --map-dot: var(--raw-color-slate-500);
+  --map-grid: var(--raw-color-slate-600);
+  --map-grid-ghost: var(--raw-color-slate-900);
+  --map-mark: var(--raw-color-ice-50);
+  --timeline-outline: var(--raw-color-stone-600);
+  --timeline-fill: var(--raw-color-white-alpha-10);
+  --timeline-rail: var(--raw-color-white-alpha-20);
+  --paddock-contour: var(--raw-color-ink-alpha-08);
+  --footer-contour: var(--raw-color-white-alpha-10);
+  --accent: var(--raw-color-cyan-400);
+  --accent-muted: var(--raw-color-cyan-alpha-25);
+
+  --type-impact: var(--raw-font-size-96);
+  --type-display-lg: var(--raw-font-size-70);
+  --type-display: var(--raw-font-size-52);
+  --type-heading: var(--raw-font-size-38);
+  --type-title: var(--raw-font-size-20);
+  --type-lead: var(--raw-font-size-18);
+  --type-label: var(--raw-font-size-16);
+  --type-body: var(--raw-font-size-14);
+  --type-eyebrow: var(--raw-font-size-12);
+  --type-display-sm: var(--raw-font-size-55);
+  --type-year: var(--raw-font-size-36);
+
+  --leading-headline: 0.95; --leading-flat: 0.9; --leading-cap: 0.72; --leading-display: 1.1;
+  --duration-fast: 150ms; --duration-normal: 250ms; --duration-plate: 700ms;
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --ease-plate: cubic-bezier(0.33, 0, 0, 1);
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Oswald", Impact, sans-serif;
+}
+
+/* ---- root font-size bands: a rem is one design pixel of the band's frame ---- */
+html { font-size: 16px; }
+@media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+@media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+@media (max-width: 1279px) { html { font-size: 16px; } }
+
+/* the 1441-1920 band is based on 1920 but the hero + season were drawn at 1440 */
+@media (min-width: 1441px) and (max-width: 1920px) {
+  [data-hero] { --hero-base: calc(1920 / 1440);
+    --type-impact: calc(6rem * var(--hero-base)); --type-display-lg: calc(4.375rem * var(--hero-base));
+    --type-display: calc(3.25rem * var(--hero-base)); --type-heading: calc(2.375rem * var(--hero-base));
+    --type-title: calc(1.25rem * var(--hero-base)); --type-lead: calc(1.125rem * var(--hero-base));
+    --type-label: calc(1rem * var(--hero-base)); --type-body: calc(0.875rem * var(--hero-base));
+    --type-eyebrow: calc(0.75rem * var(--hero-base)); }
+  [data-hero] [data-hero-panels] { width: calc(13.625rem * var(--hero-base, 1)); }
+  [data-hero] [data-hero-stats]  { width: calc(10.75rem * var(--hero-base, 1)); }
+  [data-hero] [data-hero-map]    { height: calc(3.125rem * var(--hero-base, 1)); width: calc(4.875rem * var(--hero-base, 1)); }
+  [data-season] { --season-base: calc(1920 / 1440);
+    --type-display-sm: calc(3.4375rem * var(--season-base)); --type-lead: calc(1.125rem * var(--season-base));
+    --type-body: calc(0.875rem * var(--season-base)); --type-eyebrow: calc(0.75rem * var(--season-base)); }
+}
+
+/* ============================================================================
+   RESET
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100lvh;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img, svg, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p, figure { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+/* scroll lock while the mobile sheet is open */
+html.is-locked { position: relative; overflow: hidden; height: 100%; }
+
+/* text-engine primitives — no overflow clip anywhere: the display leadings
+   (0.95, 0.72) would shave descenders. */
+.tx { display: flex; flex-wrap: wrap; column-gap: 0.3em; }
+.tx > span { display: inline-block; will-change: transform, opacity; }
+.tx--letters { column-gap: 0em; }
+
+/* ============================================================================
+   THE STICKY STACK
+   ========================================================================= */
+[data-stack] { position: relative; background: var(--surface-black); }
+[data-pin] { position: sticky; top: 0; }
+[data-pin-inner] { transform-origin: center; }
+[data-pin-shade] {
+  position: absolute; inset: 0; background: var(--surface-black);
+  opacity: 0; pointer-events: none; z-index: 40;
+}
+[data-pin-last] { position: relative; z-index: 20; }
+
+/* ============================================================================
+   1 — HERO
+   ========================================================================= */
+[data-hero] {
+  position: relative; isolation: isolate;
+  min-height: 100lvh; overflow: hidden;
+  background: var(--background);
+}
+.hero__canvas {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  width: 100%; height: 100%;
+  transform: translateZ(0); backface-visibility: hidden; will-change: transform;
+}
+/* the layout-owned fit box the scene reads (below xl only) */
+.hero__figure { position: absolute; inset: 0; margin: 0 -1.5rem; z-index: 1; pointer-events: none; }
+.hero__fit { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; }
+@media (min-width: 768px) { .hero__fit { height: calc(100% - 2rem); } }
+@media (min-width: 1024px) { .hero__fit { height: calc(100% - 4rem); } }
+@media (max-width: 1023px) { .hero__figure { top: 30%; } }
+@media (max-width: 639px)  { .hero__figure { top: 36%; } }
+@media (min-width: 1280px) { .hero__figure { display: none; } }
+
+/* the copy ramp (below xl only) — six stops tracing an ease */
+.hero__ramp {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 22%; z-index: 10; pointer-events: none;
+  background-image: linear-gradient(to bottom,
+    color-mix(in srgb, var(--background) 0%, transparent) 0%,
+    color-mix(in srgb, var(--background) 6%, transparent) 26%,
+    color-mix(in srgb, var(--background) 20%, transparent) 46%,
+    color-mix(in srgb, var(--background) 45%, transparent) 64%,
+    color-mix(in srgb, var(--background) 74%, transparent) 80%,
+    color-mix(in srgb, var(--background) 93%, transparent) 91%,
+    var(--background) 100%);
+}
+.hero__ramp2 {
+  position: absolute; left: 0; right: 0; bottom: -13rem; height: 26rem; z-index: 10; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--background) 60%, var(--background));
+}
+@media (min-width: 768px)  { .hero__ramp2 { display: none; } }
+@media (min-width: 1280px) { .hero__ramp { display: none; } }
+
+.hero__content {
+  position: relative; z-index: 20;
+  min-height: 100lvh; display: flex; flex-direction: column;
+  padding: 1.5rem; gap: 0.5rem;
+}
+@media (min-width: 640px)  { .hero__content { padding-left: 2rem; padding-right: 2rem; gap: 1rem; } }
+@media (min-width: 768px)  { .hero__content { gap: 1.5rem; } }
+@media (min-width: 1024px) { .hero__content { gap: 2rem; } }
+@media (max-height: 500px) { .hero__content { padding-top: 0.75rem; padding-bottom: 0.75rem; gap: 1rem; } }
+
+/* ---- masthead ---- */
+.masthead {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 30;
+}
+.masthead__logo img, .sheet__logo img { height: 1.5rem; width: auto; }
+.masthead__nav { position: absolute; left: 50%; transform: translateX(-50%); }
+.masthead__nav ul { display: flex; gap: 4rem; }
+.masthead__nav a, .masthead__garage {
+  font-size: var(--type-label); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--foreground); transition: color var(--duration-fast) var(--ease-entrance);
+}
+.masthead__nav a:hover, .masthead__garage:hover { color: var(--accent); }
+.masthead__garage { font-weight: 700; }
+@media (max-width: 1279px) { .masthead__nav, .masthead__garage { display: none; } }
+.burger { padding: 0.5rem; margin-right: -0.5rem; display: grid; gap: 0.3125rem; }
+.burger span { display: block; width: 1.5rem; height: 1px; background: var(--foreground); }
+@media (min-width: 1280px) { .burger { display: none; } }
+
+/* ---- middle row ---- */
+/* Below md the middle is transparent to the column, so the four blocks order
+   themselves; the identity takes the free space so the copy sits on the foot,
+   over the ramp, exactly as it does at xl. */
+.hero__middle { display: contents; }
+@media (max-width: 767px) {
+  .masthead { order: 1; }
+  .hero__identity { order: 2; margin-top: auto; }
+  [data-hero-panels] { order: 3; }
+  .hero__actions { order: 4; }
+}
+@media (min-width: 768px) {
+  .hero__middle { display: flex; justify-content: space-between; gap: 2rem; margin-top: auto; }
+}
+@media (min-width: 1280px) {
+  .hero__middle { flex: 1; display: flex; align-items: center; justify-content: space-between; margin-top: 0; }
+}
+
+/* ---- driver identity ---- */
+.hero__identity { position: relative; order: 2; }
+@media (min-width: 1280px) {
+  .hero__identity {
+    max-width: 26.0625rem; display: flex; flex-direction: column; gap: 6.0625rem;
+  }
+}
+.hero__id {
+  font-size: var(--type-label); text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--foreground-muted); margin-bottom: 1rem;
+}
+@media (max-height: 500px) { .hero__id { margin-bottom: 0.25rem; } }
+@media (min-width: 1280px) {
+  .hero__id { position: absolute; left: 20.0625rem; top: 0.5625rem; margin-bottom: 0; }
+}
+.hero__name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--type-display-lg); text-transform: uppercase;
+  line-height: var(--leading-headline);
+  max-width: 6em; justify-content: flex-start; text-align: left;
+}
+@media (max-height: 500px) { .hero__name { font-size: var(--type-heading); } }
+@media (min-width: 768px)  { .hero__name { font-size: var(--type-impact); } }
+@media (min-width: 1024px) { .hero__name { font-size: var(--type-display-lg); } }
+@media (min-width: 1280px) { .hero__name { font-size: var(--type-impact); } }
+.hero__meta { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+@media (max-height: 500px) { .hero__meta { gap: 0.25rem; margin-top: 0.75rem; } }
+@media (min-width: 1280px) { .hero__meta { margin-top: 0; } }
+.hero__meta li { display: flex; align-items: center; gap: 0.5rem; }
+.hero__meta span {
+  font-size: var(--type-lead); text-transform: uppercase; line-height: var(--leading-flat);
+}
+.hero__meta img { flex: none; }
+.ico-flag { width: 1.125rem; height: 0.75rem; }
+.ico-rookie { width: 1rem; height: 1rem; }
+.ico-merc { width: 0.875rem; height: 0.875rem; }
+
+/* ---- bracket panels ---- */
+[data-hero-panels] { order: 3; display: flex; flex-direction: column; gap: 2rem; }
+@media (max-width: 639px) { [data-hero-panels] { display: none; } }
+@media (min-width: 768px) { [data-hero-panels] { width: 13.625rem; } }
+.panel { position: relative; padding: 1rem; color: var(--foreground); }
+@media (min-width: 640px) { .panel { padding: 1rem 1.375rem 1.1875rem; } }
+.panel__corner { position: absolute; width: 0.625rem; height: 0.625rem; overflow: visible; }
+.panel__corner--tr { top: 0; right: 0; }
+.panel__corner--tl { top: 0; left: 0; transform: scaleX(-1); }
+.panel__corner--bl { bottom: 0; left: 0; transform: scale(-1); }
+.panel__corner--br { bottom: 0; right: 0; transform: scaleY(-1); }
+.panel__eyebrow {
+  font-size: var(--type-eyebrow); font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--accent);
+}
+.panel__list {
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+  display: flex; flex-direction: column; gap: 0.375rem; margin-top: 1rem;
+}
+.panel__list dt { font-weight: 700; }
+[data-hero-map] {
+  width: 3.125rem; height: 4.875rem; object-fit: contain; object-position: left;
+}
+@media (min-width: 640px) { [data-hero-map] { width: 4.375rem; height: 6.25rem; object-position: right; } }
+.panel__race { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+@media (min-width: 768px) {
+  .panel__race { display: block; }
+  .panel__race [data-hero-map] { margin-top: 1.75rem; margin-left: auto; }
+}
+[data-hero-stats] {
+  margin-top: 1.5rem; display: flex; justify-content: space-between; width: 10.75rem;
+}
+@media (min-width: 768px) {
+  [data-hero-stats] { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; width: auto; }
+}
+.stat { text-align: center; }
+@media (min-width: 768px) { .stat { text-align: left; } }
+.stat dt {
+  font-size: var(--type-eyebrow); text-transform: uppercase;
+  letter-spacing: var(--raw-tracking-label); white-space: nowrap;
+}
+.stat dd {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: var(--type-heading); line-height: var(--leading-cap);
+  letter-spacing: var(--raw-tracking-stat);
+}
+.stat dd .tx { justify-content: center; }
+@media (min-width: 768px) { .stat dd .tx { justify-content: flex-start; } }
+
+/* ---- actions row ---- */
+.hero__actions { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 1rem; }
+@media (min-width: 640px) {
+  .hero__actions {
+    margin-top: 0; display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: end; gap: 2rem;
+  }
+}
+.trailer { display: flex; align-items: center; gap: 0.75rem; }
+.trailer img { width: 2rem; height: 2rem; }
+.trailer__lines {
+  display: flex; flex-direction: column; gap: 0.375rem;
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+}
+.trailer__lines b { font-weight: 500; transition: color var(--duration-fast) var(--ease-entrance); }
+.trailer:hover .trailer__lines b { color: var(--accent); }
+.trailer__lines time { color: var(--foreground-muted); }
+.socials {
+  display: flex; gap: 2rem; justify-content: flex-end;
+  font-size: var(--type-body); text-transform: uppercase; line-height: var(--leading-flat);
+}
+@media (min-width: 1280px) { .socials { gap: 3.6875rem; } }
+.socials a { transition: color var(--duration-fast) var(--ease-entrance); }
+.socials a:hover { color: var(--accent); }
+/* after the base rules, so the hide wins on a phone */
+@media (max-width: 639px) { .trailer, .socials { display: none; } }
+
+/* ---- profile CTA: a 220x50 frame measured in em off its own 20px label ---- */
+.cta {
+  position: relative; font-size: var(--type-title);
+  display: flex; align-items: center; justify-content: center; gap: 1.6em;
+  width: 100%; height: 3.5rem;
+}
+@media (min-width: 640px) { .cta { height: 2.5em; width: 11em; } }
+.cta__frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cta__flood { transform-origin: left; transform: scaleX(0); transition: transform var(--duration-normal) var(--ease-plate); }
+.cta:hover .cta__flood { transform: scaleX(1); }
+.cta__label {
+  position: relative; text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--accent); transition: color var(--duration-normal) var(--ease-plate);
+}
+.cta:hover .cta__label { color: var(--surface-black); }
+.cta__arrow {
+  position: relative; width: 0.65em; height: 0.5em; overflow: visible;
+  transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.cta__arrow path { stroke: var(--accent); transition: stroke var(--duration-normal) var(--ease-plate); }
+.cta:hover .cta__arrow { transform: translateX(0.25rem); }
+.cta:hover .cta__arrow path { stroke: var(--surface-black); }
+
+/* ============================================================================
+   THE LOADING VEIL
+   ========================================================================= */
+.veil {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--background);
+}
+.veil__inner { display: flex; flex-direction: column; align-items: center; }
+.veil__helmet {
+  position: relative; width: 7.2rem; height: 8.5rem;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+}
+.veil__shell { position: absolute; inset: 0; background: var(--foreground); opacity: 0.12; }
+.veil__fill { position: absolute; inset: 0; background: var(--foreground); transform-origin: top; transform: scaleY(0); }
+.veil__name {
+  margin-top: 1.75rem; font-size: var(--type-lead); text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: 0.18em;
+}
+.veil__meter { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--border-muted); }
+.veil__meter i { display: block; height: 100%; background: var(--foreground); transform-origin: left; transform: scaleX(0); }
+
+/* ============================================================================
+   THE MOBILE SHEET
+   ========================================================================= */
+.sheet {
+  position: fixed; inset: 0; z-index: 50; background: var(--background);
+  padding: 1.5rem 2rem; display: flex; flex-direction: column;
+}
+.sheet__top { display: flex; align-items: center; justify-content: space-between; }
+.sheet__close { position: relative; width: 1.5rem; height: 1.5rem; }
+.sheet__close span {
+  position: absolute; left: 0; top: 50%; width: 1.5rem; height: 1px; background: var(--foreground);
+}
+.sheet__close span:first-child { transform: rotate(45deg); }
+.sheet__close span:last-child { transform: rotate(-45deg); }
+.sheet__nav { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+@media (min-width: 640px) { .sheet__nav { gap: 1.5rem; } }
+.sheet__nav a {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--type-heading);
+  text-transform: uppercase; line-height: var(--leading-headline);
+  transition: color var(--duration-fast) var(--ease-entrance);
+}
+@media (min-width: 640px) { .sheet__nav a { font-size: var(--type-display); } }
+.sheet__nav a:hover { color: var(--accent); }
+
+/* ============================================================================
+   2 — THE SEASON SO FAR
+   ========================================================================= */
+[data-season] {
+  position: relative; isolation: isolate;
+  min-height: 100lvh; overflow: hidden;
+  background: var(--surface-black); color: var(--foreground-on-dark);
+}
+/* the seam: a chequered flag coming apart */
+.season__seam {
+  position: absolute; left: 0; right: 0; top: 0; height: 26vh; z-index: 30;
+  pointer-events: none; width: 100%;
+}
+.season__map { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; }
+/* the instrument panel sits behind the copy, so the reading edge is shaded */
+.season__scrim {
+  position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  background: linear-gradient(to right,
+    rgb(9 10 11 / 0.94) 0%, rgb(9 10 11 / 0.86) 26%, rgb(9 10 11 / 0.55) 48%, rgb(9 10 11 / 0) 74%);
+}
+@media (max-width: 1023px) {
+  .season__scrim { background: linear-gradient(to bottom, rgb(9 10 11 / 0) 0%, rgb(9 10 11 / 0.7) 34%, rgb(9 10 11 / 0.92) 60%); }
+}
+.season__content {
+  position: relative; z-index: 20; min-height: 100lvh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 1.5rem; gap: 2rem;
+}
+@media (min-width: 640px) { .season__content { padding: 2rem; } }
+@media (min-width: 1280px) { .season__content { padding: 3rem 3rem 3.5rem; } }
+.season__eyebrow {
+  font-size: var(--type-eyebrow); font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--accent);
+}
+.season__head {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: var(--type-heading); line-height: var(--leading-headline);
+  max-width: 9em; margin-top: 1rem;
+}
+@media (min-width: 768px) { .season__head { font-size: var(--type-display); } }
+@media (min-width: 1280px) { .season__head { font-size: var(--type-display-sm); } }
+.season__grid { display: flex; flex-direction: column; gap: 2rem; }
+@media (min-width: 1024px) {
+  .season__grid { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 4rem; }
+}
+.season__copy {
+  font-size: var(--type-body); text-transform: uppercase; line-height: 1.5;
+  color: var(--foreground-on-dark-muted); max-width: 28em;
+}
+.season__copy p + p { margin-top: 0.75rem; }
+.season__rows { display: flex; flex-wrap: wrap; gap: 2rem 3rem; }
+.season__row dt {
+  font-size: var(--type-eyebrow); text-transform: uppercase;
+  letter-spacing: var(--raw-tracking-label); color: var(--foreground-on-dark-faint);
+}
+.season__row dd {
+  font-family: var(--font-display); font-weight: 500; font-size: var(--type-heading);
+  line-height: var(--leading-cap); letter-spacing: var(--raw-tracking-stat);
+  margin-top: 0.5rem;
+}
+.season__row dd em { font-style: normal; color: var(--accent); }
+.season__legend {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  font-size: var(--type-eyebrow); text-transform: uppercase;
+  letter-spacing: var(--raw-tracking-eyebrow); color: var(--foreground-on-dark-faint);
+  border-top: 1px solid var(--border-on-dark); padding-top: 1rem;
+}
+.season__legend b { font-weight: 500; color: var(--foreground-on-dark); }
+
+/* ============================================================================
+   3 — FROM KARTS TO F1 (the timeline)
+   ========================================================================= */
+[data-timeline] {
+  container-type: inline-size;
+  position: relative; background: var(--surface-dark); color: var(--foreground-on-dark);
+  overflow: hidden;
+}
+.tl__head { padding: 8.3333cqw 3.3333cqw 5.5556cqw; position: relative; z-index: 5; }
+.tl__eyebrow {
+  font-size: 0.8333cqw; font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow); color: var(--accent);
+}
+.tl__title {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: 3.8194cqw; line-height: var(--leading-headline); margin-top: 1.1111cqw;
+}
+.tl__rows { position: relative; }
+/* the rail down the middle */
+.tl__rail {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+  background: var(--timeline-rail); z-index: 4; transform: translateX(-50%);
+}
+.tl__thread {
+  position: absolute; left: 0; top: 0; width: 1px; background: var(--foreground-on-dark);
+  transform-origin: top; height: 100%; transform: scaleY(0);
+}
+.tl__marker {
+  position: absolute; left: 50%; top: 0; width: 0.6944cqw; height: 0.6944cqw;
+  border: 1px solid var(--foreground-on-dark); background: var(--surface-dark);
+  z-index: 6; transform: translate(-50%, -50%) rotate(0deg);
+}
+.tl__row {
+  position: relative; z-index: 5; display: grid; align-items: center;
+  grid-template-columns: 1fr 1fr; gap: 0 4.1667cqw;
+  padding: 0 3.3333cqw; min-height: 27.7778cqw;
+  transition: opacity var(--duration-normal) var(--ease-entrance);
+}
+.tl__row:nth-child(even) .tl__plate { order: 2; }
+.tl__row:nth-child(even) .tl__text { order: 1; text-align: right; }
+.tl__row:nth-child(even) .tl__text .tx { justify-content: flex-end; }
+[data-timeline].is-hovering .tl__row { opacity: 0.28; }
+[data-timeline].is-hovering .tl__row.is-active { opacity: 1; }
+.tl__plate {
+  position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+  background: var(--timeline-fill);
+  outline: 1px solid var(--timeline-outline); outline-offset: -1px;
+  /* stepped corners */
+  clip-path: polygon(
+    0 0, calc(100% - 2.2222cqw) 0, 100% 2.2222cqw, 100% 100%,
+    2.2222cqw 100%, 0 calc(100% - 2.2222cqw));
+  transition: inset var(--duration-plate) var(--ease-plate);
+}
+.tl__plate img {
+  position: absolute; inset: -6%; width: 112%; height: 112%;
+  object-fit: cover; will-change: transform;
+}
+.tl__plate figcaption {
+  position: absolute; left: 1.1111cqw; bottom: 1.1111cqw; z-index: 3;
+  font-size: 0.8333cqw; text-transform: uppercase; letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--foreground-on-dark); mix-blend-mode: difference;
+}
+.tl__scrim { position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgb(9 10 11 / 0.55), transparent 55%); }
+.tl__year {
+  font-family: var(--font-display); font-weight: 700; font-size: 2.5cqw;
+  line-height: var(--leading-cap); letter-spacing: var(--raw-tracking-stat);
+  color: var(--foreground-on-dark);
+}
+.tl__label {
+  font-family: var(--font-display); font-weight: 500; text-transform: uppercase;
+  font-size: 1.6667cqw; line-height: var(--leading-headline); margin-top: 1.1111cqw;
+}
+.tl__note {
+  font-size: 0.9722cqw; text-transform: uppercase; line-height: 1.5;
+  color: var(--foreground-on-dark-muted); margin-top: 1.1111cqw; max-width: 24em;
+}
+.tl__row:nth-child(even) .tl__note { margin-left: auto; }
+@media (max-width: 767px) {
+  .tl__row { grid-template-columns: 1fr; gap: 1rem; padding: 0 1.5rem 3rem; min-height: 0; }
+  .tl__row:nth-child(even) .tl__plate { order: 0; }
+  .tl__row:nth-child(even) .tl__text { order: 0; text-align: left; }
+  .tl__row:nth-child(even) .tl__text .tx { justify-content: flex-start; }
+  .tl__row:nth-child(even) .tl__note { margin-left: 0; }
+  .tl__rail { left: 1.5rem; }
+  .tl__marker { left: 1.5rem; }
+  .tl__head { padding: 4rem 1.5rem 2rem; }
+  .tl__title { font-size: var(--type-heading); }
+  .tl__eyebrow { font-size: var(--type-eyebrow); }
+  .tl__year { font-size: var(--type-year); }
+  .tl__label { font-size: var(--type-title); }
+  .tl__note { font-size: var(--type-body); }
+  .tl__plate figcaption { font-size: var(--type-eyebrow); left: 1rem; bottom: 1rem; }
+  .tl__marker { width: 10px; height: 10px; }
+}
+
+/* ============================================================================
+   4 — FROM THE PADDOCK
+   ========================================================================= */
+[data-paddock] {
+  container-type: inline-size;
+  position: relative; isolation: isolate;
+  background: var(--background); color: var(--foreground); overflow: hidden;
+}
+.pd__contours { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; }
+.pd__inner { position: relative; z-index: 10; padding: 8.3333cqw 3.3333cqw 0; }
+.pd__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4.1667cqw; align-items: start; }
+.pd__eyebrow {
+  font-size: 0.8333cqw; font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow); color: var(--accent);
+}
+.pd__title {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: 6.6667cqw; line-height: var(--leading-headline); margin-top: 1.1111cqw;
+  max-width: 6em;
+}
+.pd__body {
+  font-size: 0.9722cqw; text-transform: uppercase; line-height: 1.55;
+  max-width: 30em; margin-top: 2.7778cqw;
+}
+.pd__body p + p { margin-top: 1.1111cqw; }
+.pd__meta {
+  display: flex; gap: 2.7778cqw; margin-top: 2.7778cqw;
+  border-top: 1px solid var(--border-muted); padding-top: 1.3889cqw;
+}
+.pd__meta dt {
+  font-size: 0.8333cqw; text-transform: uppercase;
+  letter-spacing: var(--raw-tracking-label); color: var(--foreground-muted);
+}
+.pd__meta dd {
+  font-family: var(--font-display); font-weight: 500; font-size: 1.6667cqw;
+  line-height: var(--leading-cap); letter-spacing: var(--raw-tracking-stat); margin-top: 0.5556cqw;
+}
+/* chamfered dark button */
+.pd__btn {
+  position: relative; display: inline-flex; align-items: center; gap: 1.6em;
+  font-size: 1.1111cqw; text-transform: uppercase; line-height: var(--leading-flat);
+  height: 3.2em; padding: 0 1.8em; margin-top: 2.7778cqw;
+  color: var(--foreground-on-dark);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.9em), calc(100% - 0.9em) 100%, 0 100%);
+  background: var(--surface-black); isolation: isolate; overflow: hidden;
+  transition: color var(--duration-normal) var(--ease-plate);
+}
+.pd__btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent);
+  transform-origin: left; transform: scaleX(0);
+  transition: transform var(--duration-normal) var(--ease-plate);
+}
+.pd__btn:hover { color: var(--surface-black); }
+.pd__btn:hover::before { transform: scaleX(1); }
+.pd__btn svg { width: 0.95em; height: 0.73em; overflow: visible; }
+.pd__btn path { stroke: currentColor; }
+/* the portrait bleeding off both ends */
+.pd__figure {
+  position: relative; margin: 4.1667cqw -3.3333cqw 0;
+  height: 41.6667cqw; overflow: hidden;
+}
+.pd__figure img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; }
+.pd__melt {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 55%;
+  background: linear-gradient(to bottom, transparent, var(--surface-black) 78%, var(--surface-black));
+}
+/* the calendar band */
+.pd__band { position: relative; background: var(--surface-black); color: var(--foreground-on-dark); padding: 3.3333cqw 3.3333cqw 4.1667cqw; }
+.pd__band-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-size: 0.8333cqw; text-transform: uppercase; letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--foreground-on-dark-faint); border-bottom: 1px solid var(--border-on-dark);
+  padding-bottom: 1.1111cqw;
+}
+.pd__band-head b { color: var(--accent); font-weight: 500; }
+.cal {
+  position: relative; display: grid; grid-template-columns: repeat(5, 1fr);
+  margin-top: 2.7778cqw;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--raw-edge-fade-share), #000 calc(100% - var(--raw-edge-fade-share)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--raw-edge-fade-share), #000 calc(100% - var(--raw-edge-fade-share)), transparent 100%);
+}
+.cal__round { position: relative; padding: 1.3889cqw 0.5556cqw; }
+.cal__connector { position: absolute; left: 0; top: 0; width: 100%; height: 1px; overflow: visible; }
+.cal__no {
+  font-size: 0.8333cqw; letter-spacing: var(--raw-tracking-label);
+  color: var(--foreground-on-dark-faint); text-transform: uppercase;
+}
+.cal__name {
+  font-family: var(--font-display); font-weight: 500; text-transform: uppercase;
+  font-size: 1.3889cqw; line-height: var(--leading-headline); margin-top: 0.5556cqw;
+}
+.cal__date {
+  font-size: 0.8333cqw; text-transform: uppercase; margin-top: 0.5556cqw;
+  color: var(--foreground-on-dark-muted);
+}
+.cal__result {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.1111cqw;
+  line-height: var(--leading-cap); letter-spacing: var(--raw-tracking-stat);
+  margin-top: 1.1111cqw; color: var(--foreground-on-dark);
+}
+.cal__round.is-live .cal__result, .cal__round.is-live .cal__name { color: var(--accent); }
+.cal__bracket { position: absolute; inset: 0.5556cqw -0.2778cqw; pointer-events: none; }
+.cal__pulse {
+  position: absolute; left: 50%; top: 0.5556cqw; width: 0.4167cqw; height: 0.4167cqw;
+  transform: translate(-50%, -50%); border-radius: 50%; background: var(--accent);
+}
+@media (max-width: 1023px) {
+  .pd__grid { grid-template-columns: 1fr; gap: 2rem; }
+  .pd__inner { padding: 4rem 1.5rem 0; }
+  .pd__eyebrow { font-size: var(--type-eyebrow); }
+  .pd__title { font-size: var(--type-display); }
+  .pd__body, .pd__note { font-size: var(--type-body); }
+  .pd__meta dt { font-size: var(--type-eyebrow); }
+  .pd__meta dd { font-size: var(--type-title); }
+  .pd__btn { font-size: var(--type-body); }
+  .pd__figure { margin: 2rem -1.5rem 0; height: 60vw; }
+  .pd__band { padding: 2rem 1.5rem 3rem; }
+  .pd__band-head { font-size: var(--type-eyebrow); }
+  .cal { grid-template-columns: repeat(5, minmax(9rem, 1fr)); overflow-x: auto; }
+  .cal__no, .cal__date { font-size: var(--type-eyebrow); }
+  .cal__name { font-size: var(--type-label); }
+  .cal__result { font-size: var(--type-label); }
+  .cal__pulse { width: 6px; height: 6px; }
+}
+
+/* ============================================================================
+   5 — KEEP PUSHING FORWARD (the footer)
+   ========================================================================= */
+[data-footer] {
+  container-type: inline-size;
+  position: relative; background: var(--accent); padding: 16px;
+}
+.ft__panel {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--surface-black); color: var(--foreground-on-dark);
+  min-height: 44.4444cqw; display: flex; flex-direction: column;
+}
+.ft__contours { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; opacity: 0.1; }
+.ft__inner {
+  position: relative; z-index: 10; flex: 1;
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 4.1667cqw;
+  padding: 5.5556cqw 3.3333cqw 0;
+}
+.ft__title {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: 5.5556cqw; line-height: var(--leading-headline); max-width: 7em;
+}
+.ft__eyebrow {
+  font-size: 0.8333cqw; font-weight: 500; text-transform: uppercase;
+  line-height: var(--leading-flat); letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--accent); margin-bottom: 1.1111cqw;
+}
+.ft__nav { display: flex; flex-direction: column; gap: 0.8333cqw; }
+.ft__nav a {
+  font-size: 1.1111cqw; text-transform: uppercase; line-height: var(--leading-flat);
+  color: var(--foreground-on-dark); transition: color var(--duration-fast) var(--ease-entrance);
+}
+.ft__nav a:hover { color: var(--accent); }
+.ft__figure {
+  position: absolute; right: 3.3333cqw; bottom: 0; z-index: 5;
+  width: 26.3889cqw; pointer-events: none;
+}
+.ft__figure img { width: 100%; height: auto; }
+.ft__legal {
+  position: relative; z-index: 10;
+  display: flex; flex-wrap: wrap; gap: 1.3889cqw; justify-content: space-between;
+  border-top: 1px solid var(--border-on-dark);
+  margin: 4.1667cqw 3.3333cqw 0; padding: 1.3889cqw 0 2.2222cqw;
+  font-size: 0.8333cqw; text-transform: uppercase; letter-spacing: var(--raw-tracking-eyebrow);
+  color: var(--foreground-on-dark-faint);
+}
+.ft__legal a { transition: color var(--duration-fast) var(--ease-entrance); }
+.ft__legal a:hover { color: var(--accent); }
+@media (max-width: 1023px) {
+  .ft__inner { grid-template-columns: 1fr; padding: 3rem 1.5rem 0; gap: 2rem; }
+  .ft__title { font-size: var(--type-display); }
+  .ft__eyebrow { font-size: var(--type-eyebrow); }
+  .ft__nav a { font-size: var(--type-label); }
+  .ft__figure { position: relative; right: auto; width: 60%; margin: 2rem auto -1px; }
+  .ft__legal { font-size: var(--type-eyebrow); margin: 2rem 1.5rem 0; padding: 1rem 0 1.5rem; }
+  .ft__panel { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     THE STICKY STACK — hero (z0) + season (z10) pin and are covered;
+     the timeline (relative, z20) covers but is never covered.
+     ======================================================================= -->
+<div data-stack>
+
+  <!-- ---------------------------------------------------------------- HERO -->
+  <div data-pin data-pin-hero style="z-index:0">
+    <div data-pin-inner>
+      <section data-hero id="hero">
+        <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
+
+        <!-- the box the layout owns; the scene fits the subject to it below xl -->
+        <div class="hero__figure" aria-hidden="true"><div class="hero__fit" data-hero-fitbox></div></div>
+
+        <div class="hero__ramp" aria-hidden="true"></div>
+        <div class="hero__ramp2" aria-hidden="true"></div>
+
+        <div class="hero__content">
+
+          <header class="masthead" data-reveal="masthead">
+            <a class="masthead__logo" href="/" aria-label="Grido1 Racing Systems">
+              <img src="assets/grido1-logo.webp" width="424" height="97" alt="" data-ph="logo">
+            </a>
+            <nav class="masthead__nav" aria-label="Primary">
+              <ul>
+                <li><a href="/driver">Driver</a></li>
+                <li><a href="/season">SEASON</a></li>
+                <li><a href="/journal">journal</a></li>
+                <li><a href="/next-race">next race</a></li>
+                <li><a href="/store">store</a></li>
+              </ul>
+            </nav>
+            <a class="masthead__garage" href="/garage"><span aria-hidden="true">[ </span>Garage<span aria-hidden="true"> &rarr; ]</span></a>
+            <button class="burger" type="button" data-burger aria-label="Open menu" aria-expanded="false">
+              <span></span><span></span>
+            </button>
+          </header>
+
+          <div class="hero__middle">
+
+            <div class="hero__identity">
+              <div>
+                <p class="hero__id" data-reveal="id">driver_012</p>
+                <h1 class="hero__name" data-text="words" data-stagger="110" data-config="REVEAL" data-mode="once" data-delay="180">kimi antonelli</h1>
+              </div>
+              <ul class="hero__meta">
+                <li data-reveal="meta"><img class="ico-flag" src="assets/flag-italy.webp" width="18" height="12" alt="Italy" data-ph="flag"><span>Italy</span></li>
+                <li data-reveal="meta"><img class="ico-rookie" src="assets/icon-rookie.svg" width="16" height="16" alt="" data-ph="rookie"><span>rookie season_2026</span></li>
+                <li data-reveal="meta"><img class="ico-merc" src="assets/mercedes-logo.webp" width="14" height="14" alt="" data-ph="merc"><span>Mercedes-AMG F1 Team</span></li>
+              </ul>
+            </div>
+
+            <div data-hero-panels data-reveal="panels">
+              <section class="panel" data-brackets aria-label="Next race">
+                <p class="panel__eyebrow">next race</p>
+                <div class="panel__race">
+                  <dl class="panel__list">
+                    <dt>belgian gp</dt>
+                    <dd>spa-francorchamps</dd>
+                    <dd><time datetime="2026-07-27">27 jul 2026</time></dd>
+                  </dl>
+                  <img data-hero-map src="assets/circuit-spa.webp" width="312" height="199" alt="Spa-Francorchamps circuit layout" data-ph="circuit">
+                </div>
+              </section>
+
+              <section class="panel" data-brackets aria-label="Season stats">
+                <p class="panel__eyebrow">Season stats</p>
+                <dl data-hero-stats>
+                  <div class="stat"><dt>Races</dt><dd data-text="letters" data-stagger="26" data-config="FIGURE" data-mode="forward" data-delay="0">12</dd></div>
+                  <div class="stat"><dt>Podiums</dt><dd data-text="letters" data-stagger="26" data-config="FIGURE" data-mode="forward" data-delay="90">3</dd></div>
+                  <div class="stat"><dt>Points</dt><dd data-text="letters" data-stagger="26" data-config="FIGURE" data-mode="forward" data-delay="180">118</dd></div>
+                </dl>
+              </section>
+            </div>
+
+          </div>
+
+          <div class="hero__actions" data-reveal="actions">
+            <a class="trailer" href="/trailer">
+              <img src="assets/play-button.svg" width="32" height="32" alt="" data-ph="play">
+              <span class="trailer__lines"><b>watch trailer</b><time datetime="PT1M26S">01:26</time></span>
+            </a>
+
+            <a class="cta" href="/driver/kimi-antonelli">
+              <svg class="cta__frame" viewBox="0 0 220 50" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M220 42L212.932 50H0V0H220V42Z" fill="#0E0F14"/>
+                <path class="cta__flood" d="M220 42L212.932 50H0V0H220V42Z" fill="var(--accent)"/>
+                <path d="M220 42L212.932 50H0V0H220V42Z" fill="none" stroke="var(--accent)" stroke-opacity="0.25"/>
+                <g fill="none" stroke="var(--accent)">
+                  <path d="M205 49.5H213L219.5 42V36"/>
+                  <path d="M212 0.5H219.5V7"/>
+                  <path d="M8 0.5H0.5V7"/>
+                  <path d="M7.5 49.5H0.5V42.5"/>
+                </g>
+              </svg>
+              <span class="cta__label">view profile</span>
+              <svg class="cta__arrow" viewBox="0 0 13.7071 10.7071" fill="none" aria-hidden="true" focusable="false">
+                <path d="M0 5.35355H13M8 10.3536L13 5.35355L8 0.353553"/>
+              </svg>
+            </a>
+
+            <nav class="socials" aria-label="Social">
+              <a href="https://instagram.com" rel="noreferrer noopener">inst</a>
+              <a href="https://x.com" rel="noreferrer noopener">x</a>
+              <a href="https://youtube.com" rel="noreferrer noopener">youtube</a>
+            </nav>
+          </div>
+
+        </div>
+      </section>
+    </div>
+    <div data-pin-shade></div>
+  </div>
+
+  <!-- -------------------------------------------------------------- SEASON -->
+  <div data-pin data-pin-season style="z-index:10">
+    <div data-pin-inner>
+      <section data-season id="season">
+        <canvas class="season__map" data-season-map aria-hidden="true"></canvas>
+        <canvas class="season__seam" data-season-seam aria-hidden="true"></canvas>
+        <div class="season__scrim" aria-hidden="true"></div>
+
+        <div class="season__content">
+          <div class="season__grid">
+            <div>
+              <p class="season__eyebrow">season_2026 &nbsp;//&nbsp; rounds 01&ndash;12</p>
+              <h2 class="season__head" data-text="words" data-stagger="90" data-config="REVEAL" data-mode="forward" data-delay="120">the season so far</h2>
+              <div class="season__copy">
+                <p data-text="words" data-stagger="14" data-config="COPY_SLOW" data-mode="forward" data-delay="320" data-gap="0.28">Twelve rounds in. Three podiums, one front row, and a car that has finally stopped fighting him through the slow corners.</p>
+                <p data-text="words" data-stagger="14" data-config="COPY_SLOW" data-mode="forward" data-delay="520" data-gap="0.28">The rookie brief was simple: finish races, learn the tyre, keep the car out of the wall. He has done all three and then started taking points off the front of the grid.</p>
+              </div>
+            </div>
+
+            <dl class="season__rows">
+              <div class="season__row"><dt>best finish</dt><dd><em>P2</em></dd></div>
+              <div class="season__row"><dt>quali avg</dt><dd>P6.4</dd></div>
+              <div class="season__row"><dt>laps led</dt><dd>41</dd></div>
+              <div class="season__row"><dt>championship</dt><dd>P5</dd></div>
+            </dl>
+          </div>
+
+          <div class="season__legend">
+            <span><b>t1</b> la source</span>
+            <span><b>t5</b> eau rouge</span>
+            <span><b>t9</b> les combes</span>
+            <span><b>t15</b> blanchimont</span>
+            <span>lap record <b>1:44.701</b></span>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pin-shade></div>
+  </div>
+
+  <!-- ------------------------------------------------------------ TIMELINE -->
+  <div data-pin-last>
+    <section data-timeline id="timeline">
+      <div class="tl__head">
+        <p class="tl__eyebrow">career_log</p>
+        <h2 class="tl__title" data-text="words" data-stagger="90" data-config="REVEAL" data-mode="forward" data-delay="80">from karts to f1</h2>
+      </div>
+
+      <div class="tl__rows" data-tl-rows>
+        <div class="tl__rail" aria-hidden="true"><i class="tl__thread" data-tl-thread></i></div>
+        <div class="tl__marker" data-tl-marker aria-hidden="true"></div>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2015.webp" alt="Kimi Antonelli in a kart, 2015" data-ph="plate:1"><span class="tl__scrim"></span><figcaption>first race weekend</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2015</p>
+            <h3 class="tl__label">the first kart</h3>
+            <p class="tl__note">Eight years old, a rented chassis and a wet Sunday at Lonato. He finished last and asked to go again the same afternoon.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2018.webp" alt="Karting championship podium, 2018" data-ph="plate:2"><span class="tl__scrim"></span><figcaption>wsk final round</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2018</p>
+            <h3 class="tl__label">national titles</h3>
+            <p class="tl__note">Two Italian championships in a single season. The junior programme scouts started turning up at the fence.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2021.webp" alt="Formula 4 test, 2021" data-ph="plate:3"><span class="tl__scrim"></span><figcaption>first single-seater test</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2021</p>
+            <h3 class="tl__label">into a single-seater</h3>
+            <p class="tl__note">Signed to the junior academy in February, in a Formula 4 car by November. Nine hundred kilometres of testing before his first start.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2022.webp" alt="Formula 4 champion, 2022" data-ph="plate:4"><span class="tl__scrim"></span><figcaption>double f4 champion</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2022</p>
+            <h3 class="tl__label">two championships</h3>
+            <p class="tl__note">Italian and German F4 in the same year. Thirteen wins. The first season where the results stopped being a surprise to anyone.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2023.webp" alt="Formula Regional, 2023" data-ph="plate:5"><span class="tl__scrim"></span><figcaption>formula regional</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2023</p>
+            <h3 class="tl__label">regional, twice over</h3>
+            <p class="tl__note">Middle East and European titles back to back. A full winter of simulator work between them, and no off-season to speak of.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2024.webp" alt="Formula 2 rookie season, 2024" data-ph="plate:6"><span class="tl__scrim"></span><figcaption>f2 rookie year</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2024</p>
+            <h3 class="tl__label">the hard year</h3>
+            <p class="tl__note">Straight to Formula 2, skipping a rung. Two wins, four retirements, and the tyre education the step up was really for.</p>
+          </div>
+        </article>
+
+        <article class="tl__row" data-tl-row>
+          <figure class="tl__plate"><img src="assets/career-2026.webp" alt="Mercedes-AMG F1 debut, 2026" data-ph="plate:7"><span class="tl__scrim"></span><figcaption>race one, melbourne</figcaption></figure>
+          <div class="tl__text">
+            <p class="tl__year" data-tl-year>2026</p>
+            <h3 class="tl__label">driver_012</h3>
+            <p class="tl__note">A works seat at eighteen. Points on debut, a podium by round four, and the rest of the grid recalibrating what a rookie is allowed to do.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+</div><!-- /stack -->
+
+<!-- ---------------------------------------------------------------- PADDOCK -->
+<section data-paddock id="paddock">
+  <canvas class="pd__contours" data-paddock-contours aria-hidden="true"></canvas>
+
+  <div class="pd__inner">
+    <div class="pd__grid">
+      <div>
+        <p class="pd__eyebrow">race report &nbsp;//&nbsp; round 12</p>
+        <h2 class="pd__title" data-text="words" data-stagger="100" data-config="REVEAL" data-mode="forward" data-delay="60">from the paddock</h2>
+      </div>
+      <div>
+        <div class="pd__body">
+          <p data-text="words" data-stagger="12" data-config="COPY" data-mode="forward" data-delay="200" data-gap="0.28">Silverstone was the first weekend the car did exactly what the simulator said it would. We started sixth, ran a long first stint on the hard, and came out of the stops in clean air with eleven laps of tyre in hand.</p>
+          <p data-text="words" data-stagger="12" data-config="COPY" data-mode="forward" data-delay="360" data-gap="0.28">The pass for third happened at Stowe on lap forty-four. Nothing clever about it. Just a car that finally rotates on entry and a driver who has stopped apologising for the space he takes.</p>
+        </div>
+        <dl class="pd__meta">
+          <div><dt>grid</dt><dd>P6</dd></div>
+          <div><dt>finish</dt><dd>P3</dd></div>
+          <div><dt>fastest lap</dt><dd>1:29.404</dd></div>
+          <div><dt>points</dt><dd>+15</dd></div>
+        </dl>
+        <a class="pd__btn" href="/journal/round-12">
+          read the full report
+          <svg viewBox="0 0 13.7071 10.7071" fill="none" aria-hidden="true" focusable="false"><path d="M0 5.35355H13M8 10.3536L13 5.35355L8 0.353553"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <figure class="pd__figure">
+      <img src="assets/paddock-portrait.webp" alt="Kimi Antonelli in the paddock" data-ph="paddock">
+      <span class="pd__melt" aria-hidden="true"></span>
+    </figure>
+  </div>
+
+  <div class="pd__band">
+    <div class="pd__band-head">
+      <span>calendar_2026</span>
+      <span><b>live</b> &nbsp;round 13 &nbsp;/&nbsp; spa-francorchamps</span>
+    </div>
+
+    <div class="cal" data-calendar>
+      <div class="cal__round">
+        <svg class="cal__connector" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="var(--border-on-dark)" stroke-dasharray="4 6"/></svg>
+        <p class="cal__no">r11</p><h3 class="cal__name">canadian gp</h3>
+        <p class="cal__date"><time datetime="2026-06-08">08 jun</time> &nbsp;/&nbsp; montr&eacute;al</p>
+        <p class="cal__result">P6</p>
+      </div>
+      <div class="cal__round">
+        <svg class="cal__connector" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="var(--border-on-dark)" stroke-dasharray="4 6"/></svg>
+        <p class="cal__no">r12</p><h3 class="cal__name">british gp</h3>
+        <p class="cal__date"><time datetime="2026-07-06">06 jul</time> &nbsp;/&nbsp; silverstone</p>
+        <p class="cal__result">P3</p>
+      </div>
+      <div class="cal__round is-live">
+        <svg class="cal__connector" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="var(--accent)" stroke-dasharray="4 6"/></svg>
+        <span class="cal__pulse" data-cal-pulse aria-hidden="true"></span>
+        <svg class="cal__bracket" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" aria-hidden="true">
+          <path d="M0 12V0H14M86 0H100V12M100 88V100H86M14 100H0V88" stroke="var(--accent)" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <p class="cal__no">r13</p><h3 class="cal__name">belgian gp</h3>
+        <p class="cal__date"><time datetime="2026-07-27">27 jul</time> &nbsp;/&nbsp; spa</p>
+        <p class="cal__result">next</p>
+      </div>
+      <div class="cal__round">
+        <svg class="cal__connector" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="var(--border-on-dark)" stroke-dasharray="4 6"/></svg>
+        <p class="cal__no">r14</p><h3 class="cal__name">hungarian gp</h3>
+        <p class="cal__date"><time datetime="2026-08-03">03 aug</time> &nbsp;/&nbsp; hungaroring</p>
+        <p class="cal__result">&mdash;</p>
+      </div>
+      <div class="cal__round">
+        <svg class="cal__connector" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="var(--border-on-dark)" stroke-dasharray="4 6"/></svg>
+        <p class="cal__no">r15</p><h3 class="cal__name">dutch gp</h3>
+        <p class="cal__date"><time datetime="2026-08-31">31 aug</time> &nbsp;/&nbsp; zandvoort</p>
+        <p class="cal__result">&mdash;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------------- FOOTER -->
+<footer data-footer id="footer">
+  <div class="ft__panel">
+    <canvas class="ft__contours" data-footer-contours aria-hidden="true"></canvas>
+
+    <div class="ft__inner">
+      <div>
+        <p class="ft__eyebrow">grido1 racing systems</p>
+        <h2 class="ft__title" data-text="words" data-stagger="110" data-config="REVEAL" data-mode="forward" data-delay="60">keep pushing forward</h2>
+      </div>
+      <nav class="ft__nav" aria-label="Footer">
+        <a href="/driver" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="240">driver</a>
+        <a href="/season" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="300">season</a>
+        <a href="/journal" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="360">journal</a>
+        <a href="/next-race" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="420">next race</a>
+        <a href="/store" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="480">store</a>
+        <a href="/garage" data-text="letters" data-stagger="18" data-config="TYPE" data-mode="forward" data-delay="540">garage</a>
+      </nav>
+    </div>
+
+    <figure class="ft__figure" data-footer-figure aria-hidden="true">
+      <img src="assets/footer-figure.webp" alt="" data-ph="figure">
+    </figure>
+
+    <div class="ft__legal">
+      <span>&copy; 2026 grido1 racing systems</span>
+      <span>driver_012 &nbsp;/&nbsp; kimi antonelli</span>
+      <nav><a href="/privacy">privacy</a> &nbsp;&nbsp; <a href="/terms">terms</a></nav>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+/* ============================================================================
+   LANDO — GRIDO1 Racing Systems / Kimi Antonelli
+   One file. three.js + Lenis are the only external code; everything else here
+   is hand-written: the spring solver, the shared ticker, the scroll triggers,
+   the text reveals, the sticky stack, the circuit trace, the halftone, the
+   chequered dissolves, the contour backdrops and the loader.
+   ========================================================================= */
+
+const ASSET_BASE_URL = "assets";
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------------------------------------------------------------------
+   The shared ticker — one rAF loop, reference counted.
+   A subscriber is called only when time - last > getFramerate(), so a
+   framerate of 0 runs every tick and 1000/60-2 gives 60 on a 60Hz screen and
+   every second tick at 120.
+   ------------------------------------------------------------------------ */
+const tickerSubs = new Set();
+let tickerRaf = 0;
+
+const tickerFrame = (time) => {
+  tickerRaf = requestAnimationFrame(tickerFrame);
+  for (const s of Array.from(tickerSubs)) {
+    const budget = s.rate();
+    if (time - s.last > budget) { s.last = time; s.cb(time); }
+  }
+};
+
+function subscribe(cb, rate = () => 0) {
+  const s = { cb, rate, last: -Infinity };
+  tickerSubs.add(s);
+  if (!tickerRaf) tickerRaf = requestAnimationFrame(tickerFrame);
+  return () => {
+    tickerSubs.delete(s);
+    if (!tickerSubs.size && tickerRaf) { cancelAnimationFrame(tickerRaf); tickerRaf = 0; }
+  };
+}
+
+/* ---------------------------------------------------------------------------
+   The spring — react-spring's damped solver: 1ms substeps, a 64ms frame cap,
+   mass 1, at rest when |velocity| and |target - value| are both under the
+   precision. A config given as { duration, easing } is a plain tween instead.
+   ------------------------------------------------------------------------ */
+function Spring(cfg, initial = 0) {
+  const s = {
+    value: initial, velocity: 0, target: initial, from: initial, t: 0, done: true,
+    to(v) {
+      if (v === s.target) return;
+      s.target = v; s.from = s.value; s.t = 0; s.done = false;
+    },
+    set(v) { s.value = s.target = s.from = v; s.velocity = 0; s.done = true; },
+    step(dt) {
+      if (s.done) return;
+      if (cfg.duration != null) {
+        s.t = Math.min(cfg.duration, s.t + dt);
+        const p = cfg.duration <= 0 ? 1 : s.t / cfg.duration;
+        const e = cfg.easing ? cfg.easing(p) : p;
+        s.value = s.from + (s.target - s.from) * e;
+        if (p >= 1) { s.value = s.target; s.done = true; }
+        return;
+      }
+      const tension = cfg.tension ?? 170, friction = cfg.friction ?? 26, mass = cfg.mass ?? 1;
+      let remaining = Math.min(dt, 64);
+      while (remaining > 0) {
+        const h = Math.min(1, remaining) / 1000;
+        const a = (-tension * (s.value - s.target) - friction * s.velocity) / mass;
+        s.velocity += a * h;
+        s.value += s.velocity * h;
+        remaining -= 1;
+      }
+      const prec = cfg.precision ?? 0.01;
+      if (Math.abs(s.velocity) < prec && Math.abs(s.target - s.value) < prec) {
+        s.value = s.target; s.velocity = 0; s.done = true;
+      }
+    },
+  };
+  return s;
+}
+
+/* Named configs, baked. */
+const CFG = {
+  REVEAL:   { tension: 90,  friction: 26 },
+  ROW:      { tension: 170, friction: 24 },
+  ITEM:     { tension: 170, friction: 24 },
+  SHEET:    { tension: 190, friction: 26 },
+  FIGURE:   { tension: 200, friction: 24 },
+  TYPE:     { tension: 210, friction: 24 },
+  YEAR:     { tension: 190, friction: 24 },
+  COPY_SLOW:{ tension: 110, friction: 26 },
+  COPY:     { tension: 150, friction: 24 },
+  NAME:     { tension: 190, friction: 24 },
+  VEIL:     { tension: 70,  friction: 24 },
+  CLEAR:    { tension: 140, friction: 26 },
+  LABEL:    { tension: 110, friction: 26 },
+  PROGRESS_WAIT:  { tension: 10,  friction: 30 },
+  PROGRESS_READY: { tension: 170, friction: 26 },
+  YEAR_SETTLE: { tension: 32, friction: 26 },
+  TRIGGER:  { tension: 140, friction: 30 },
+};
+
+/* ---------------------------------------------------------------------------
+   Property interpolation. A spring for a linear system scales exactly with the
+   distance travelled, so one 0..1 spring driving every property of a unit is
+   identical to one spring per property with the same config — and a great deal
+   cheaper.
+   ------------------------------------------------------------------------ */
+const NUM_UNIT = /^(-?[\d.]+)(.*)$/;
+function interp(a, b, t) {
+  if (typeof a === "number" && typeof b === "number") return a + (b - a) * t;
+  const ma = String(a).match(NUM_UNIT), mb = String(b).match(NUM_UNIT);
+  if (!ma || !mb) return t < 0.5 ? a : b;
+  const unit = mb[2] || ma[2] || "";
+  return (parseFloat(ma[1]) + (parseFloat(mb[1]) - parseFloat(ma[1])) * t) + unit;
+}
+function applyProps(el, from, to, t) {
+  const tf = [];
+  if ("opacity" in to) el.style.opacity = String(interp(from.opacity ?? 0, to.opacity ?? 1, t));
+  if ("x" in to) tf.push("translateX(" + interp(from.x ?? "0px", to.x, t) + ")");
+  if ("y" in to) tf.push("translateY(" + interp(from.y ?? "0px", to.y, t) + ")");
+  if ("scale" in to) tf.push("scale(" + interp(from.scale ?? 1, to.scale, t) + ")");
+  if ("scaleX" in to) tf.push("scaleX(" + interp(from.scaleX ?? 1, to.scaleX, t) + ")");
+  if ("scaleY" in to) tf.push("scaleY(" + interp(from.scaleY ?? 1, to.scaleY, t) + ")");
+  if ("rotate" in to) tf.push("rotate(" + interp(from.rotate ?? 0, to.rotate, t) + "deg)");
+  if (tf.length) el.style.transform = tf.join(" ");
+}
+
+/**
+ * One animated unit. `mode`:
+ *   always  — animates to `to` while enabled, back to `from` when not
+ *   once    — plays in once and never replays
+ *   forward — plays in when enabled; on the way back up it holds `to` rather
+ *             than reversing (the caller reports scrolledDown)
+ */
+function makeAnim(el, opt) {
+  const from = opt.from || { opacity: 0 }, to = opt.to || { opacity: 1 };
+  const spring = Spring(opt.config || CFG.REVEAL, 0);
+  const delay = opt.delay || 0;
+  const mode = opt.mode || "always";
+  let enabled = false, played = false, armedAt = -1, prev = -1, stop = null;
+
+  applyProps(el, from, to, 0);
+  if (REDUCED && opt.reducedSnap !== false) {
+    // Reduced motion: no travel, but the page must not be left invisible.
+    applyProps(el, from, to, 1);
+  }
+
+  const tick = (time) => {
+    const dt = prev < 0 ? 16 : Math.min(64, time - prev);
+    prev = time;
+    let active = enabled || (mode === "once" && played);
+    if (active && armedAt < 0) armedAt = time;
+    if (!active && mode === "always") armedAt = -1;
+    const armed = active && time - armedAt >= delay;
+    if (armed) { spring.to(1); played = true; }
+    else if (!active && mode === "always") spring.to(0);
+    spring.step(dt);
+    applyProps(el, from, to, spring.value);
+    // stop paying for a unit that has arrived; enable() re-attaches
+    if (spring.done && (armed || !active)) detach();
+  };
+
+  function attach() { if (!stop) { prev = -1; stop = subscribe(tick, () => 0); } }
+  function detach() { if (stop) { stop(); stop = null; } }
+
+  return {
+    enable(v) {
+      if (v === enabled) return;
+      enabled = v;
+      if (REDUCED) { applyProps(el, from, to, v || mode !== "always" ? 1 : 0); return; }
+      if (v || mode === "always") attach();
+    },
+    get played() { return played; },
+  };
+}
+
+/* ---------------------------------------------------------------------------
+   The text engine — split to words or letters, one spring per unit, unit i
+   starting at delayIn + i * stagger. No overflow clip anywhere: the display
+   leadings (0.95, 0.72) would shave descenders.
+   ------------------------------------------------------------------------ */
+const WORD_OUT = { opacity: 0, y: "0.35em" }, WORD_IN = { opacity: 1, y: "0em" };
+const LETTER_OUT = { opacity: 0, y: "0.3em" }, LETTER_IN = { opacity: 1, y: "0em" };
+
+function splitText(el) {
+  const kind = el.dataset.text;
+  const raw = el.textContent.replace(/\s+/g, " ").trim();
+  const stagger = Number(el.dataset.stagger || 60);
+  const config = CFG[el.dataset.config] || CFG.REVEAL;
+  const delay = Number(el.dataset.delay || 0);
+  const gap = el.dataset.gap;
+
+  el.textContent = "";
+  const sr = document.createElement("span");
+  sr.className = "sr-only";
+  sr.textContent = raw;
+  el.appendChild(sr);
+
+  const wrap = document.createElement("span");
+  wrap.className = "tx" + (kind === "letters" ? " tx--letters" : "");
+  wrap.setAttribute("aria-hidden", "true");
+  if (gap) wrap.style.columnGap = gap + "em";
+  el.appendChild(wrap);
+
+  const units = [];
+  if (kind === "letters") {
+    for (const ch of raw) {
+      const s = document.createElement("span");
+      if (ch === " ") { s.style.width = "0.3em"; s.innerHTML = "&nbsp;"; }
+      else s.textContent = ch;
+      wrap.appendChild(s);
+      units.push(s);
+    }
+  } else {
+    for (const w of raw.split(" ")) {
+      const s = document.createElement("span");
+      s.textContent = w;
+      wrap.appendChild(s);
+      units.push(s);
+    }
+  }
+
+  const out = kind === "letters" ? LETTER_OUT : WORD_OUT;
+  const into = kind === "letters" ? LETTER_IN : WORD_IN;
+  const mode = el.dataset.mode || "forward";
+  const anims = units.map((u, i) =>
+    makeAnim(u, { from: out, to: into, config, delay: delay + i * stagger, mode }));
+  return { anims, units, enable: (v) => anims.forEach((a) => a.enable(v)) };
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll triggers — the element's rect read inside the ticker at 10ms, gated
+   by an IntersectionObserver plus ten more frames after it leaves.
+   ------------------------------------------------------------------------ */
+function positions(bb, vh) {
+  return {
+    top_top: bb.top, center_top: bb.top + bb.height / 2, bottom_top: bb.bottom,
+    top_bottom: bb.top - vh, center_bottom: bb.top + bb.height / 2 - vh, bottom_bottom: bb.bottom - vh,
+    top_center: bb.top - vh / 2, center_center: bb.top + bb.height / 2 - vh / 2, bottom_center: bb.bottom - vh / 2,
+  };
+}
+
+function scrollTrigger(el, { start = "top_bottom", end = "bottom_top", onProgress }) {
+  let inView = false, grace = 0;
+  const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) grace = 10; }, { rootMargin: "0px" });
+  io.observe(el);
+  const stop = subscribe(() => {
+    if (!inView) { if (grace <= 0) return; grace -= 1; }
+    const bb = el.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    const p = positions(bb, vh);
+    const scrollStart = p[start], scrollEnd = p[end];
+    const length = Math.abs(scrollStart - scrollEnd) || 1;
+    const progress = Math.min(Math.max(0, 1 - (scrollStart + length) / length), 1);
+    onProgress(progress, bb);
+  }, () => 10);
+  return () => { io.disconnect(); stop(); };
+}
+
+/** in-view gate, fires once. */
+function inViewOnce(el, cb, rootMargin = "0% 0% -25% 0%") {
+  const io = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { io.disconnect(); cb(); }
+  }, { rootMargin });
+  io.observe(el);
+  return () => io.disconnect();
+}
+
+/* Resolves a tier-2 token through a probe element's computed colour — a custom
+   property read straight off :root can still be an unsubstituted var() chain. */
+function readToken(token) {
+  const probe = document.createElement("span");
+  probe.style.cssText = "position:absolute;visibility:hidden;color:var(" + token + ")";
+  document.body.appendChild(probe);
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  return resolved;
+}
+
+/* ---------------------------------------------------------------------------
+   Root font-size above 1920 — a rem stays one design pixel of the 1920 frame.
+   ------------------------------------------------------------------------ */
+function scaleRoot() {
+  if (window.innerWidth > 1920) {
+    document.documentElement.style.fontSize = (16 * window.innerWidth / 1920) + "px";
+  } else {
+    document.documentElement.style.fontSize = "";
+  }
+}
+scaleRoot();
+window.addEventListener("resize", scaleRoot, { passive: true });
+
+/* ---------------------------------------------------------------------------
+   Lenis, registered first on the shared ticker so every scroll reader on the
+   page sees this frame's scrollY.
+   ------------------------------------------------------------------------ */
+let lenis = null;
+if (!REDUCED) {
+  try {
+    const { default: Lenis } = await import("lenis");
+    lenis = new Lenis({ smoothWheel: true });
+    subscribe((time) => lenis.raf(time), () => 0);
+  } catch { lenis = null; }
+}
+
+/* ---------------------------------------------------------------------------
+   The sticky stack — each pinned layer recedes as the next comes over it.
+   ------------------------------------------------------------------------ */
+(function stickyStack() {
+  const RECEDE_SCALE = 0.9;
+  const RECEDE_SHADE = 0.55;
+  const phone = window.matchMedia("(max-width: 639px)");
+  const layers = Array.from(document.querySelectorAll("[data-pin]"));
+  const all = Array.from(document.querySelectorAll("[data-pin], [data-pin-last]"));
+  const pinned = layers.map((layer, i) => ({
+    inner: layer.querySelector("[data-pin-inner]"),
+    shade: layer.querySelector("[data-pin-shade]"),
+    next: all[all.indexOf(layer) + 1],
+  })).filter((p) => p.next);
+
+  const apply = () => {
+    const view = window.innerHeight || 1;
+    const shrink = phone.matches ? 0 : 1 - RECEDE_SCALE;
+    for (const { inner, shade, next } of pinned) {
+      const p = Math.min(1, Math.max(0, 1 - next.getBoundingClientRect().top / view));
+      // No transform at rest — a scale(1) here makes the layer the containing
+      // block for the hero's position:fixed loader.
+      inner.style.transform = p > 0 && shrink > 0 ? "scale(" + (1 - shrink * p) + ")" : "";
+      inner.style.willChange = p > 0 && shrink > 0 ? "transform" : "";
+      shade.style.opacity = String(RECEDE_SHADE * p);
+      inner.style.visibility = p >= 1 ? "hidden" : "visible";
+    }
+  };
+
+  let queued = false;
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; apply(); });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  apply();
+})();
+
+/* ---------------------------------------------------------------------------
+   Asset placeholders. Every image points at ASSET_BASE_URL; where the file is
+   not there, a generated SVG of the right dimensions stands in so the layout
+   and the motion are unaffected.
+   ------------------------------------------------------------------------ */
+const svgURI = (w, h, inner) =>
+  "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h +
+    '" viewBox="0 0 ' + w + ' ' + h + '">' + inner + "</svg>");
+
+const PLATE_TINTS = [
+  ["#12141a", "#2a2d36"], ["#171a20", "#31353f"], ["#101319", "#252831"],
+  ["#191c23", "#383c47"], ["#0e1116", "#22252d"], ["#151820", "#2d313b"],
+  ["#0c0f14", "#1e2129"],
+];
+
+function placeholderFor(kind) {
+  const [key, arg] = kind.split(":");
+  switch (key) {
+    case "logo":
+      return svgURI(424, 97,
+        '<rect width="424" height="97" fill="none"/>' +
+        '<path d="M6 6h74v18H24v49h56V52H52V34h46v57H6z" fill="#090a0b"/>' +
+        '<text x="112" y="70" font-family="Oswald,Impact,sans-serif" font-size="60" font-weight="700" fill="#090a0b" letter-spacing="2">GRIDO1</text>' +
+        '<rect x="112" y="80" width="180" height="4" fill="#02d2e3"/>');
+    case "flag":
+      return svgURI(18, 12,
+        '<rect width="6" height="12" fill="#008C45"/><rect x="6" width="6" height="12" fill="#F4F5F0"/><rect x="12" width="6" height="12" fill="#CD212A"/>');
+    case "rookie":
+      return svgURI(16, 16,
+        '<path d="M8 1l2 4.6 5 .5-3.8 3.3 1.1 4.9L8 11.7 3.7 14.3l1.1-4.9L1 6.1l5-.5z" fill="#090a0b"/>');
+    case "merc":
+      return svgURI(14, 14,
+        '<circle cx="7" cy="7" r="6.4" fill="none" stroke="#090a0b" stroke-width="1.2"/>' +
+        '<path d="M7 7V1.2M7 7L2 9.9M7 7l5 2.9" stroke="#090a0b" stroke-width="1.2"/>');
+    case "play":
+      return svgURI(32, 32,
+        '<circle cx="16" cy="16" r="15" fill="none" stroke="#090a0b"/><path d="M13 10.5l9 5.5-9 5.5z" fill="#090a0b"/>');
+    case "circuit":
+      return svgURI(312, 199,
+        '<path d="M42 176c-14-8-24-22-20-40 5-22 30-28 38-46 7-16-4-32 6-44 11-13 33-10 47-4 22 9 33 32 55 40 20 8 44 2 61 14 16 11 18 36 6 51-13 17-39 17-56 29-14 10-20 28-36 34-19 7-40-2-58-9-16-6-29-17-43-25z" fill="none" stroke="#090a0b" stroke-width="6" stroke-linejoin="round"/>' +
+        '<rect x="36" y="168" width="4" height="18" fill="#02d2e3"/>');
+    case "plate": {
+      const t = PLATE_TINTS[(Number(arg) - 1) % PLATE_TINTS.length];
+      let inner =
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0" stop-color="' + t[1] + '"/><stop offset="1" stop-color="' + t[0] + '"/>' +
+        '</linearGradient></defs><rect width="800" height="600" fill="url(#g)"/>';
+      for (let i = 0; i < 9; i++) {
+        inner += '<rect x="' + (i * 96 - 40) + '" y="0" width="14" height="600" fill="#ffffff" opacity="0.03"/>';
+      }
+      inner +=
+        '<circle cx="470" cy="250" r="150" fill="#000" opacity="0.25"/>' +
+        '<path d="M320 600c0-120 60-200 150-200s150 80 150 200z" fill="#000" opacity="0.35"/>' +
+        '<circle cx="470" cy="252" r="118" fill="#ffffff" opacity="0.07"/>' +
+        '<rect x="352" y="236" width="236" height="52" rx="26" fill="#02d2e3" opacity="0.22"/>' +
+        '<text x="40" y="70" font-family="Oswald,Impact,sans-serif" font-size="44" font-weight="700" fill="#ffffff" opacity="0.18">0' + arg + "</text>";
+      return svgURI(800, 600, inner);
+    }
+    case "paddock": {
+      let inner =
+        '<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="#eef2f4"/><stop offset="0.62" stop-color="#c3ccd2"/>' +
+        '<stop offset="1" stop-color="#8e989f"/></linearGradient></defs>' +
+        '<rect width="1600" height="900" fill="url(#p)"/>';
+      // garage bays, falling out of focus toward the right
+      for (let i = 0; i < 11; i++) {
+        inner += '<rect x="' + (120 + i * 138) + '" y="' + (120 + (i % 3) * 26) + '" width="58" height="' +
+          (520 - (i % 4) * 60) + '" fill="#6b767d" opacity="' + (0.10 + (i % 3) * 0.05).toFixed(2) + '"/>';
+      }
+      inner +=
+        '<rect x="0" y="702" width="1600" height="198" fill="#59636a" opacity="0.5"/>' +
+        '<rect x="0" y="700" width="1600" height="4" fill="#02d2e3" opacity="0.45"/>' +
+        // the driver, off to the left third
+        '<path d="M300 900c0-176 92-286 232-286s232 110 232 286z" fill="#171a20"/>' +
+        '<ellipse cx="532" cy="470" rx="118" ry="140" fill="#b9a294"/>' +
+        '<path d="M414 470c0-84 53-146 118-146s118 62 118 146c0 26-6 48-16 66H430c-10-18-16-40-16-66z" fill="#20242c"/>' +
+        '<rect x="430" y="646" width="204" height="12" fill="#02d2e3"/>' +
+        '<rect x="404" y="690" width="256" height="7" fill="#39404a"/>';
+      return svgURI(1600, 900, inner);
+    }
+    case "figure":
+      return svgURI(700, 900,
+        '<path d="M350 90c110 0 190 82 190 186 0 42-10 74-26 100l24 40-52 26c-38 26-84 40-136 40s-98-14-136-40l-52-26 24-40c-16-26-26-58-26-100C160 172 240 90 350 90z" fill="#e7ecef"/>' +
+        '<path d="M196 300c46-34 108-52 154-52s108 18 154 52c6 30-4 58-24 70H220c-20-12-30-40-24-70z" fill="#090a0b"/>' +
+        '<path d="M196 300c46-34 108-52 154-52s108 18 154 52" fill="none" stroke="#02d2e3" stroke-width="8"/>' +
+        '<path d="M182 470c48 40 106 62 168 62s120-22 168-62c74 30 122 96 132 178l14 252H36l14-252c10-82 58-148 132-178z" fill="#12141a"/>' +
+        '<rect x="286" y="560" width="128" height="10" fill="#02d2e3"/>' +
+        '<rect x="256" y="600" width="188" height="6" fill="#2a2d36"/>');
+    default:
+      return svgURI(64, 64, '<rect width="64" height="64" fill="#dfe5e9"/>');
+  }
+}
+
+for (const img of document.querySelectorAll("img[data-ph]")) {
+  const swap = () => { img.src = placeholderFor(img.dataset.ph); img.removeAttribute("data-ph"); };
+  if (img.complete && img.naturalWidth === 0) swap();
+  else img.addEventListener("error", swap, { once: true });
+}
+
+/* ---------------------------------------------------------------------------
+   Bracket panels — one 10x10 corner path, stamped four times.
+   ------------------------------------------------------------------------ */
+for (const panel of document.querySelectorAll("[data-brackets]")) {
+  for (const pos of ["tr", "tl", "bl", "br"]) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 10.5 10.5");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("aria-hidden", "true");
+    svg.classList.add("panel__corner", "panel__corner--" + pos);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "M0 0.5H10V10.5");
+    path.setAttribute("stroke", "currentColor");
+    svg.appendChild(path);
+    panel.appendChild(svg);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   The mobile sheet — appended to <body>, never inside the transformed masthead.
+   ------------------------------------------------------------------------ */
+(function mobileSheet() {
+  const burger = document.querySelector("[data-burger]");
+  if (!burger) return;
+  const LINKS = [
+    ["Driver", "/driver"], ["SEASON", "/season"], ["journal", "/journal"],
+    ["next race", "/next-race"], ["store", "/store"], ["Garage", "/garage"],
+  ];
+  let sheet = null, anims = [], veilAnim = null, mq = window.matchMedia("(min-width: 1280px)");
+
+  function close() {
+    if (!sheet) return;
+    const node = sheet; sheet = null;
+    node.remove();
+    document.documentElement.classList.remove("is-locked");
+    if (lenis) lenis.start();
+    burger.setAttribute("aria-expanded", "false");
+    burger.focus();
+    window.removeEventListener("keydown", onKey);
+    mq.removeEventListener("change", onMq);
+  }
+  const onKey = (e) => { if (e.key === "Escape") close(); };
+  const onMq = (e) => { if (e.matches) close(); };
+
+  function open() {
+    if (sheet) return;
+    sheet = document.createElement("div");
+    sheet.className = "sheet";
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-modal", "true");
+    sheet.setAttribute("aria-label", "Menu");
+    sheet.innerHTML =
+      '<div class="sheet__top">' +
+        '<a class="sheet__logo" href="/" aria-label="Grido1 Racing Systems"><img src="' + placeholderFor("logo") + '" alt=""></a>' +
+        '<button class="sheet__close" type="button" aria-label="Close menu"><span></span><span></span></button>' +
+      "</div>" +
+      '<nav class="sheet__nav" aria-label="Primary"></nav>';
+    const nav = sheet.querySelector(".sheet__nav");
+    LINKS.forEach(([label, href]) => {
+      const a = document.createElement("a");
+      a.href = href; a.textContent = label;
+      nav.appendChild(a);
+    });
+    document.body.appendChild(sheet);
+
+    veilAnim = makeAnim(sheet, { from: { opacity: 0 }, to: { opacity: 1 }, config: CFG.SHEET, mode: "always" });
+    veilAnim.enable(true);
+    anims = Array.from(nav.children).map((a, i) =>
+      makeAnim(a, {
+        from: { opacity: 0, y: "0.75rem" }, to: { opacity: 1, y: "0rem" },
+        config: CFG.ITEM, delay: 120 + i * 55, mode: "once",
+      }));
+    anims.forEach((a) => a.enable(true));
+
+    sheet.querySelector(".sheet__close").addEventListener("click", close);
+    sheet.querySelector(".sheet__logo").addEventListener("click", close);
+    nav.addEventListener("click", (e) => { if (e.target.tagName === "A") close(); });
+
+    document.documentElement.classList.add("is-locked");
+    if (lenis) lenis.stop();
+    burger.setAttribute("aria-expanded", "true");
+    sheet.querySelector(".sheet__close").focus();
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onMq);
+  }
+
+  burger.addEventListener("click", open);
+})();
+
+/* ---------------------------------------------------------------------------
+   Device tier — decided at construction, re-read when the container's width
+   changes or the pointer class flips.
+   ------------------------------------------------------------------------ */
+const CAP_60 = 1000 / 60 - 2;
+
+const isEnergySaver = () => {
+  const nav = navigator;
+  return Boolean(nav.connection && nav.connection.saveData) || (nav.deviceMemory ?? 8) <= 2;
+};
+
+function getSceneTier() {
+  const coarse = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  const width = window.innerWidth;
+  const name = width < 768 || (coarse && width < 1024) ? "mobile"
+             : coarse || width < 1280 ? "tablet" : "desktop";
+  const mobile = name === "mobile";
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saver = isEnergySaver();
+  return {
+    name, mobile, coarsePointer: coarse, reducedMotion,
+    maxDpr: mobile ? 1 : name === "tablet" ? 1.25 : 1.5,
+    frameInterval: name === "desktop" ? 0 : CAP_60,
+    pointerEnabled: !coarse && !reducedMotion,
+    antialias: name === "desktop",
+    trailSamples: mobile ? 28 : name === "tablet" ? 44 : 72,
+    outline: !mobile,
+    reveal: !mobile,
+    freeze: reducedMotion || (mobile && saver),
+  };
+}
+
+/* ---------------------------------------------------------------------------
+   THE LOADING VEIL
+   Progress is not measured: it creeps to 0.7 on a soft spring and completes to
+   1 on a stiff one the moment the scene reports ready. The exit is three
+   beats — clear the content, then 430 + 240ms later lift the veil and hand
+   over to the page's entrance on the same tick.
+   ------------------------------------------------------------------------ */
+const HELMET_MASK = svgURI(434, 512,
+  '<path fill="#000" d="M217 12c116 0 190 92 190 214v78c0 66-18 116-58 148-36 29-84 48-132 48-56 0-108-18-146-52-36-32-52-80-52-144v-78C19 104 101 12 217 12z"/>');
+
+function createVeil() {
+  const el = document.createElement("div");
+  el.className = "veil";
+  el.setAttribute("role", "status");
+  el.setAttribute("aria-label", "Loading Grido1 Racing Systems");
+  el.innerHTML =
+    '<div class="veil__inner">' +
+      '<div class="veil__helmet"><span class="veil__shell"></span><span class="veil__fill"></span></div>' +
+      '<p class="veil__name">kimi antonelli</p>' +
+    "</div>" +
+    '<div class="veil__meter"><i></i></div>';
+  document.body.appendChild(el);
+
+  const helmet = el.querySelector(".veil__helmet");
+  helmet.style.webkitMaskImage = "url(" + ASSET_BASE_URL + "/helmet-mask.png)";
+  helmet.style.maskImage = "url(" + ASSET_BASE_URL + "/helmet-mask.png)";
+  // The shipped mask is a 434x512 png; where it is not on disk, fall back to a
+  // generated silhouette of the same proportion so the fill still reads.
+  const probe = new Image();
+  probe.onerror = () => {
+    helmet.style.webkitMaskImage = "url(" + HELMET_MASK + ")";
+    helmet.style.maskImage = "url(" + HELMET_MASK + ")";
+  };
+  probe.src = ASSET_BASE_URL + "/helmet-mask.png";
+
+  const fill = el.querySelector(".veil__fill");
+  const meter = el.querySelector(".veil__meter i");
+  const inner = el.querySelector(".veil__inner");
+  const meterTrack = el.querySelector(".veil__meter");
+
+  makeAnim(el.querySelector(".veil__name"), {
+    from: { opacity: 0, y: "0.6rem" }, to: { opacity: 1, y: "0rem" },
+    config: CFG.LABEL, delay: 260, mode: "once",
+  }).enable(true);
+
+  const pcfg = Object.assign({}, CFG.PROGRESS_WAIT);
+  const progress = Spring(pcfg, 0);
+  progress.to(0.7);
+
+  let prev = -1;
+  const stopProgress = subscribe((time) => {
+    const dt = prev < 0 ? 16 : Math.min(64, time - prev);
+    prev = time;
+    progress.step(dt);
+    const v = Math.max(0, Math.min(1, progress.value));
+    fill.style.transform = "scaleY(" + v + ")";
+    meter.style.transform = "scaleX(" + v + ")";
+  }, () => 0);
+
+  const handlers = [];
+  let readyFired = false;
+
+  return {
+    onReady() {
+      if (readyFired) return;
+      readyFired = true;
+      Object.assign(pcfg, CFG.PROGRESS_READY);
+      progress.to(1);
+      el.style.pointerEvents = "none";
+      el.setAttribute("aria-label", "Loaded");
+
+      // beat 1 — the veil's own content clears
+      makeAnim(inner, {
+        from: { opacity: 1, y: "0rem" }, to: { opacity: 0, y: "-0.75rem" },
+        config: CFG.CLEAR, mode: "once",
+      }).enable(true);
+      makeAnim(meterTrack, { from: { opacity: 1 }, to: { opacity: 0 }, config: CFG.CLEAR, mode: "once" }).enable(true);
+
+      // beat 2 — 430 + 240ms later the veil lifts and the page's entrance begins
+      setTimeout(() => {
+        makeAnim(el, { from: { opacity: 1 }, to: { opacity: 0 }, config: CFG.VEIL, mode: "once" }).enable(true);
+        handlers.forEach((fn) => fn());
+
+        // beat 3 — remove only once the rendered opacity has actually gone
+        const started = performance.now();
+        const poll = subscribe((t) => {
+          const o = parseFloat(getComputedStyle(el).opacity) || 0;
+          if (o <= 0.004 || t - started > 3000) { stopProgress(); el.remove(); poll(); }
+        }, () => 0);
+      }, 430 + 240);
+    },
+    onHandover(fn) { handlers.push(fn); },
+  };
+}
+
+const veil = createVeil();
+
+/* ---------------------------------------------------------------------------
+   THE HERO ENTRANCE — every delay measured from the handover.
+   ------------------------------------------------------------------------ */
+const heroEntrance = (() => {
+  const q = (s) => document.querySelector(s);
+  const items = [];
+
+  items.push(makeAnim(q('[data-reveal="masthead"]'), {
+    from: { opacity: 0, y: "0.75rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.REVEAL, delay: 0, mode: "once" }));
+  items.push(makeAnim(q('[data-reveal="id"]'), {
+    from: { opacity: 0 }, to: { opacity: 1 }, config: CFG.REVEAL, delay: 180, mode: "once" }));
+  document.querySelectorAll('[data-reveal="meta"]').forEach((el, i) => {
+    items.push(makeAnim(el, {
+      from: { opacity: 0, y: "0.75rem" }, to: { opacity: 1, y: "0rem" },
+      config: CFG.ROW, delay: 180 + 260 + i * 130, mode: "once" }));
+  });
+  items.push(makeAnim(q('[data-reveal="panels"]'), {
+    from: { opacity: 0, y: "1.25rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.REVEAL, delay: 900, mode: "once" }));
+  items.push(makeAnim(q('[data-reveal="actions"]'), {
+    from: { opacity: 0, y: "1.25rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.REVEAL, delay: 1500, mode: "once" }));
+
+  const heroText = Array.from(document.querySelectorAll("[data-hero] [data-text]")).map(splitText);
+
+  return () => { items.forEach((a) => a.enable(true)); heroText.forEach((t) => t.enable(true)); };
+})();
+
+/* ---------------------------------------------------------------------------
+   2 — THE HERO SCENE (WebGL)
+   ------------------------------------------------------------------------ */
+const HEAD_HEIGHT = 5.4;
+const HEAD_EXTEND = 0.14;
+const DEG = Math.PI / 180;
+const STATIC_POSE = { x: 0.3, y: 0.1 };
+const CAMERA_FOV = 35;
+const CAMERA_Y = 0.1;
+const visibleWorldHeight = (cameraZ) => 2 * cameraZ * Math.tan((CAMERA_FOV * Math.PI) / 360);
+
+/**
+ * The helmet's cursor rotation, one axis at a time: the angle it reaches at
+ * the edge of the window (ampDeg, signed) and the shape of the response
+ * between centre and edge (curve), normalised so it reaches exactly the
+ * amplitude at |v| = 1 whatever the curve. tanh rather than a clamp because a
+ * clamp leaves a corner where the turn stops dead — exactly where a cursor
+ * crossing the frame is moving fastest.
+ */
+const swing = (v, ampDeg, curve) => {
+  const amp = ampDeg * DEG;
+  if (curve < 1e-3) return amp * v;
+  return (amp * Math.tanh(curve * v)) / Math.tanh(curve);
+};
+
+const DEFAULT_PARAMS = {
+  cameraZ: 10,
+  subjectY: 0,
+  subjectScale: 1,
+  subjectParallax: 0.02,
+  headParallax: 0.005,
+  headRelight: 0.32,
+  helmetPitchDeg: 2.5,
+  helmetYawDeg: 2.1,
+  helmetCurve: 1.6,
+  pointerLerp: 0.17,
+  burnSoft: 0.02,
+  burnStart: 0.14,
+  introSeconds: 4,
+  burnGlow: 4,
+  sweepRadius: 0.62,
+  sweepWarp: 0.29,
+  autoSweepAmount: 0,
+  brushRadius: 0.46,
+  brushIdle: 0.28,
+  taperBase: 1.9,
+  taperIdle: 1.6,
+  taperFast: 1.25,
+  paceAttack: 0.09,
+  paceRelease: 0.205,
+  pacePeak: 0.029,
+  revealWarp: 1.29,
+  revealWarpScale: 2.9,
+  bgRevealOpacity: 1,
+  bgLineScale: 3.8,
+  bgBands: 2.5,
+  bgThickness: 1.4,
+  bgOpacity: 0.85,
+  bgWarpAmp: 0.37,
+  bgWarpSpeed: 1.66,
+  waveWidth: 0.15,
+  waveSeconds: 3.1,
+  waveSpawn: 1.2,
+  wavePeak: 0.09,
+  riseCssPx: 200,
+  riseSeconds: 2,
+};
+
+/**
+ * Keeps the subject at the size and place a box would have given it while the
+ * canvas itself is some other size — which is how the backdrop can be
+ * stretched over the whole block without the portrait growing with it.
+ */
+function fitSubjectToBox(params, box, canvasHeight) {
+  const perPx = visibleWorldHeight(params.cameraZ) / Math.max(1, canvasHeight);
+  const baseH = HEAD_HEIGHT * (1 + HEAD_EXTEND);
+  const subjectScale = (box.height * perPx) / baseH;
+  const centerY = (canvasHeight / 2 - (box.top + box.height / 2)) * perPx + CAMERA_Y;
+  return { subjectScale, subjectY: centerY };
+}
+
+/* -- procedural stand-ins for the shipped maps ------------------------------ */
+function canvasTex(THREE, w, h, draw, srgb) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  draw(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c);
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  t.generateMipmaps = true;
+  t.minFilter = THREE.LinearMipmapLinearFilter;
+  t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+  t.needsUpdate = true;
+  return t;
+}
+
+/**
+ * One figure definition, drawn four ways: diffuse, alpha, depth, normal.
+ * The head sits where HELMET_WORN_OFFSET puts the helmet — texture v 0.604
+ * from the top is world y -0.56 on the plane, so the visor frames the eyes.
+ */
+const FACE = { cx: 0.5, cy: 0.604, rx: 0.165, ry: 0.150 };
+
+function figurePath(ctx, w, h) {
+  const cx = w * FACE.cx, cy = h * FACE.cy, rx = w * FACE.rx, ry = h * FACE.ry;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.closePath();
+  // neck
+  ctx.moveTo(cx - rx * 0.46, cy + ry * 0.4);
+  ctx.lineTo(cx + rx * 0.46, cy + ry * 0.4);
+  ctx.lineTo(cx + rx * 0.46, cy + ry * 1.45);
+  ctx.lineTo(cx - rx * 0.46, cy + ry * 1.45);
+  ctx.closePath();
+  // shoulders, running off the bottom of the frame
+  const shY = cy + ry * 1.28;
+  ctx.moveTo(cx - w * 0.38, h);
+  ctx.lineTo(cx - w * 0.38, shY + h * 0.055);
+  ctx.bezierCurveTo(cx - w * 0.33, shY + h * 0.004, cx - w * 0.18, shY - h * 0.014, cx, shY - h * 0.018);
+  ctx.bezierCurveTo(cx + w * 0.18, shY - h * 0.014, cx + w * 0.33, shY + h * 0.004, cx + w * 0.38, shY + h * 0.055);
+  ctx.lineTo(cx + w * 0.38, h);
+  ctx.closePath();
+}
+
+function makePortraitMaps(THREE) {
+  const W = 900, H = 1160;
+  const cy = H * FACE.cy, ry = H * FACE.ry, shY = cy + ry * 1.28;
+
+  const diffuse = canvasTex(THREE, W, H, (ctx, w, h) => {
+    ctx.clearRect(0, 0, w, h);
+    ctx.save(); figurePath(ctx, w, h); ctx.clip();
+    // skin, lit from the left
+    const g = ctx.createLinearGradient(w * 0.28, 0, w * 0.78, h * 0.9);
+    g.addColorStop(0, "#c8b0a2"); g.addColorStop(0.55, "#9a8172"); g.addColorStop(1, "#4a3d36");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    // the race suit
+    const s = ctx.createLinearGradient(0, shY - h * 0.03, 0, h);
+    s.addColorStop(0, "#20242c"); s.addColorStop(1, "#0c0e12");
+    ctx.fillStyle = s; ctx.fillRect(0, shY - h * 0.028, w, h);
+    // collar + team stripes
+    ctx.fillStyle = "#02d2e3"; ctx.fillRect(w * 0.20, shY + h * 0.034, w * 0.60, h * 0.009);
+    ctx.fillStyle = "#2a2d36"; ctx.fillRect(w * 0.16, shY + h * 0.066, w * 0.68, h * 0.006);
+    // a cyan rim down the left edge of the figure
+    const rim = ctx.createLinearGradient(w * 0.06, 0, w * 0.22, 0);
+    rim.addColorStop(0, "rgba(2,210,227,0.75)"); rim.addColorStop(1, "rgba(2,210,227,0)");
+    ctx.fillStyle = rim; ctx.fillRect(0, 0, w * 0.22, h);
+    ctx.restore();
+  }, true);
+
+  const alpha = canvasTex(THREE, W, H, (ctx, w, h) => {
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#fff"; figurePath(ctx, w, h); ctx.fill();
+  });
+
+  const depth = canvasTex(THREE, W, H, (ctx, w, h) => {
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
+    const g = ctx.createRadialGradient(w * 0.5, cy, w * 0.02, w * 0.5, cy + h * 0.12, w * 0.62);
+    g.addColorStop(0, "#ffffff"); g.addColorStop(0.5, "#8a8a8a"); g.addColorStop(1, "#101010");
+    ctx.save(); figurePath(ctx, w, h); ctx.clip();
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  });
+
+  const normal = canvasTex(THREE, W, H, (ctx, w, h) => {
+    ctx.fillStyle = "#8080ff"; ctx.fillRect(0, 0, w, h);
+    const cx = w * FACE.cx, rx = w * FACE.rx;
+    const img = ctx.getImageData(0, 0, w, h);
+    for (let y = Math.floor(cy - ry); y < cy + ry; y++) {
+      for (let x = Math.floor(cx - rx); x < cx + rx; x++) {
+        const dx = (x - cx) / rx, dy = (y - cy) / ry;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > 1 || x < 0 || y < 0 || x >= w || y >= h) continue;
+        const nz = Math.sqrt(1 - d2);
+        const i = (y * w + x) * 4;
+        img.data[i] = (dx * 0.5 + 0.5) * 255;
+        img.data[i + 1] = (-dy * 0.5 + 0.5) * 255;
+        img.data[i + 2] = (nz * 0.5 + 0.5) * 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  });
+
+  return { diffuse, alpha, depth, normal, aspect: W / H };
+}
+
+function makeNoiseTex(THREE) {
+  const N = 256;
+  const c = document.createElement("canvas");
+  c.width = c.height = N;
+  const ctx = c.getContext("2d");
+  const img = ctx.createImageData(N, N);
+  // value noise, three octaves, tileable by construction (integer lattice wrap)
+  const lattice = new Float32Array(N * N);
+  for (let i = 0; i < lattice.length; i++) lattice[i] = Math.random();
+  const at = (x, y) => lattice[((y % N) + N) % N * N + (((x % N) + N) % N)];
+  const smooth = (t) => t * t * (3 - 2 * t);
+  const octave = (x, y, s) => {
+    const fx = x / s, fy = y / s;
+    const x0 = Math.floor(fx), y0 = Math.floor(fy);
+    const tx = smooth(fx - x0), ty = smooth(fy - y0);
+    const a = at(x0, y0), b = at(x0 + 1, y0), cc = at(x0, y0 + 1), d = at(x0 + 1, y0 + 1);
+    return (a + (b - a) * tx) + ((cc + (d - cc) * tx) - (a + (b - a) * tx)) * ty;
+  };
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const v = octave(x, y, 32) * 0.55 + octave(x, y, 13) * 0.3 + octave(x, y, 5) * 0.15;
+      const i = (y * N + x) * 4;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = Math.max(0, Math.min(255, v * 255)) | 0;
+      img.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.needsUpdate = true;
+  return t;
+}
+
+/* -- the reveal, shared by the helmet and the backdrop ---------------------- */
+const REVEAL_GLSL = /* glsl */ `
+uniform float uTime;
+uniform vec2 uResolution;
+uniform sampler2D uNoise;
+uniform vec2 uTrail[TRAIL_N];
+uniform float uBrush;
+uniform float uTaper;
+uniform float uGate;
+uniform float uRevealWarp;
+uniform float uWarpScale;
+uniform vec2 uSweepA;
+uniform vec2 uSweepB;
+uniform float uSweepRadius;
+uniform float uSweepAmount;
+uniform float uIntro;
+uniform float uBurnSoft;
+
+vec2 screenPos() {
+  vec2 uv = gl_FragCoord.xy / uResolution;
+  vec2 p = vec2(uv.x * 2.0 - 1.0, (1.0 - uv.y) * 2.0 - 1.0);
+  p.x *= uResolution.x / uResolution.y;
+  return p;
+}
+
+float capsuleD(vec2 p, vec2 a, vec2 b) {
+  vec2 pa = p - a, ba = b - a;
+  float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
+  return length(pa - ba * h);
+}
+
+/* two scrolling noise fetches, so the edge of the stroke crawls */
+vec2 warpPos(vec2 p) {
+  float w1 = texture2D(uNoise, p * uWarpScale * 0.15 + vec2(uTime * 0.03, 0.0)).r;
+  float w2 = texture2D(uNoise, p * uWarpScale * 0.15 * 1.7 - vec2(0.0, uTime * 0.021)).r;
+  return p + (vec2(w1, w2) - 0.5) * uRevealWarp * 0.08;
+}
+
+float revealMask() {
+  vec2 p = warpPos(screenPos());
+  float field = 0.0;
+  for (int i = 0; i < TRAIL_N - 1; i++) {
+    float w = pow(1.0 - float(i) / float(TRAIL_N - 1), uTaper);
+    float r = uBrush * w;
+    float d = capsuleD(p, uTrail[i], uTrail[i + 1]);
+    field = max(field, w * exp(-(d * d) / max(r * r, 1e-5)));
+  }
+  float cursor = smoothstep(0.075, 0.085, field) * uGate;
+  float ds = capsuleD(p, uSweepA, uSweepB);
+  float sweep = (1.0 - smoothstep(uSweepRadius * 0.34, uSweepRadius * 0.52, ds)) * uSweepAmount;
+  return clamp(max(cursor, sweep), 0.0, 1.0);
+}
+
+/* the burn: 55% screen height, 45% noise, swept by a smoothstep front */
+float burnThreshold() {
+  float h = 1.0 - gl_FragCoord.y / uResolution.y;
+  float n = texture2D(uNoise, gl_FragCoord.xy / uResolution.y * 1.6).r;
+  return mix(h, n, 0.45);
+}
+float burnIntact() {
+  float front = smoothstep(0.14, 1.0, uIntro);
+  return smoothstep(front - uBurnSoft, front + uBurnSoft, burnThreshold());
+}
+`;
+
+async function createHeroScene(canvas, section, fitbox) {
+  const THREE = await import("three");
+  const {
+    ACESFilmicToneMapping, Box3, Color, FrontSide, Group, LinearMipmapLinearFilter,
+    Mesh, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PMREMGenerator,
+    RepeatWrapping, Scene, ShaderMaterial, SRGBColorSpace, TextureLoader, Vector2,
+    Vector3, WebGLRenderer, SphereGeometry, TorusGeometry, BoxGeometry, WireframeGeometry,
+    LineSegments, DoubleSide, AdditiveBlending,
+  } = THREE;
+
+  let tier = getSceneTier();
+  const params = Object.assign({}, DEFAULT_PARAMS);
+
+  const renderer = new WebGLRenderer({ canvas, antialias: tier.antialias, alpha: false, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier.maxDpr));
+  renderer.toneMapping = ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1;
+  renderer.outputColorSpace = SRGBColorSpace;
+
+  const scene = new Scene();
+  const camera = new PerspectiveCamera(CAMERA_FOV, 1, 0.1, 100);
+  camera.position.set(0, CAMERA_Y, params.cameraZ);
+
+  const tok = (n) => new Color().setStyle(readToken(n), SRGBColorSpace);
+  const ACCENT = tok("--accent");
+  const BG = tok("--background");
+  const SOFT = tok("--surface-soft");
+  const FG = tok("--foreground");
+
+  const noiseTex = makeNoiseTex(THREE);
+  const TRAIL_N = tier.trailSamples;
+
+  const trail = [];
+  for (let i = 0; i < TRAIL_N; i++) trail.push(new Vector2(STATIC_POSE.x, STATIC_POSE.y));
+
+  const U = {
+    uTime: { value: 0 },
+    uResolution: { value: new Vector2(1, 1) },
+    uNoise: { value: noiseTex },
+    uTrail: { value: trail },
+    uBrush: { value: params.brushRadius },
+    uTaper: { value: params.taperBase * params.taperIdle },
+    uGate: { value: 0 },
+    uRevealWarp: { value: params.revealWarp },
+    uWarpScale: { value: params.revealWarpScale },
+    uSweepA: { value: new Vector2(0, 0) },
+    uSweepB: { value: new Vector2(0, 0) },
+    uSweepRadius: { value: params.sweepRadius },
+    uSweepAmount: { value: 0 },
+    uIntro: { value: 0 },
+    uBurnSoft: { value: params.burnSoft },
+  };
+  const withN = (src) => "#define TRAIL_N " + TRAIL_N + "\n" + src;
+
+  /* ---- the backdrop: an analytic four-sine contour field at z -3 ---------- */
+  const bgUniforms = Object.assign({}, U, {
+    uBg: { value: BG }, uLine: { value: SOFT },
+    uLineScale: { value: params.bgLineScale }, uBands: { value: params.bgBands },
+    uThickness: { value: params.bgThickness }, uOpacity: { value: params.bgOpacity },
+    uWarpAmp: { value: params.bgWarpAmp }, uWarpSpeed: { value: params.bgWarpSpeed },
+    uBgReveal: { value: params.bgRevealOpacity }, uAspect: { value: 1 },
+  });
+  const backdropMat = new ShaderMaterial({
+    uniforms: bgUniforms,
+    depthWrite: false, depthTest: false,
+    // the ground has to be exactly --background, so it is not tone-mapped
+    toneMapped: false,
+    vertexShader: "varying vec2 vUv;\nvoid main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+    fragmentShader: withN(REVEAL_GLSL + /* glsl */ `
+      varying vec2 vUv;
+      uniform vec3 uBg; uniform vec3 uLine;
+      uniform float uLineScale, uBands, uThickness, uOpacity, uWarpAmp, uWarpSpeed, uBgReveal, uAspect;
+
+      float contourField(vec2 p) {
+        float t = uTime * 0.1;
+        p += vec2(sin(p.y * 1.3 + uTime * uWarpSpeed * 0.35),
+                  sin(p.x * 1.1 - uTime * uWarpSpeed * 0.29)) * uWarpAmp;
+        return sin(p.x) + sin(p.y * 1.27 + t) + sin((p.x + p.y) * 0.63 - t * 0.7) + sin((p.x - p.y) * 0.91 + t * 0.4);
+      }
+
+      void main() {
+        vec2 p = (vUv - 0.5) * uLineScale * vec2(uAspect, 1.0);
+        float f = contourField(p) * uBands;
+        float g = abs(fract(f) - 0.5);
+        float line = 1.0 - smoothstep(0.0, uThickness * fwidth(f), g);
+        vec3 col = mix(uBg, uLine, clamp(line, 0.0, 1.0) * uOpacity);
+        /* the same mask as two alternating greys, banded by the field's parity */
+        float rev = revealMask();
+        float parity = mod(floor(f), 2.0);
+        vec3 shade = vec3(mix(0.44, 0.62, parity));
+        col = mix(col, shade, rev * uBgReveal);
+        gl_FragColor = vec4(col, 1.0);
+        #include <colorspace_fragment>
+      }
+    `),
+  });
+  const backdrop = new Mesh(new PlaneGeometry(1, 1), backdropMat);
+  backdrop.position.z = -3;
+  backdrop.renderOrder = -10;
+  backdrop.frustumCulled = false;
+  scene.add(backdrop);
+
+  /* ---- the composition: portrait plane + worn helmet ---------------------- */
+  const composition = new Group();
+  scene.add(composition);
+  const subject = new Group();
+  composition.add(subject);
+
+  const maps = makePortraitMaps(THREE);
+  const headUniforms = {
+    uDiffuse: { value: maps.diffuse }, uAlpha: { value: maps.alpha },
+    uDepth: { value: maps.depth }, uNormal: { value: maps.normal },
+    uPointer: { value: new Vector2(STATIC_POSE.x, STATIC_POSE.y) },
+    uParallax: { value: params.headParallax }, uRelight: { value: params.headRelight },
+    uExtend: { value: HEAD_EXTEND },
+  };
+  const headMat = new ShaderMaterial({
+    uniforms: headUniforms, transparent: true, depthWrite: false, toneMapped: false,
+    vertexShader: "varying vec2 vUv;\nvoid main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+    fragmentShader: /* glsl */ `
+      varying vec2 vUv;
+      uniform sampler2D uDiffuse, uAlpha, uDepth, uNormal;
+      uniform vec2 uPointer;
+      uniform float uParallax, uRelight, uExtend;
+      void main() {
+        /* the extra band below the portrait samples the clamped bottom row */
+        vec2 uv = vec2(vUv.x, clamp((vUv.y - uExtend / (1.0 + uExtend)) * (1.0 + uExtend), 0.0, 1.0));
+        float d = texture2D(uDepth, uv).r;
+        vec2 puv = clamp(uv + (d - 0.5) * uParallax * vec2(-uPointer.x, uPointer.y) * 8.0, 0.0, 1.0);
+        vec4 c = texture2D(uDiffuse, puv);
+        float a = texture2D(uAlpha, uv).r;
+        vec3 n = normalize(texture2D(uNormal, puv).xyz * 2.0 - 1.0);
+        vec3 L = normalize(vec3(uPointer.x, -uPointer.y, 0.9));
+        float lam = max(dot(n, L), 0.0);
+        c.rgb *= 1.0 + uRelight * (lam - 0.5);
+        gl_FragColor = vec4(c.rgb, a);
+        if (gl_FragColor.a < 0.004) discard;
+        #include <colorspace_fragment>
+      }
+    `,
+  });
+  const headH = HEAD_HEIGHT * (1 + HEAD_EXTEND);
+  const head = new Mesh(new PlaneGeometry(HEAD_HEIGHT * maps.aspect, headH), headMat);
+  head.position.y = -HEAD_HEIGHT * HEAD_EXTEND * 0.5;
+  subject.add(head);
+
+  /* the helmet's own centre once it is worn */
+  const HELMET_WORN_OFFSET = new Vector3(0, -0.56, 0.35);
+  const helmetPivot = new Group();
+  helmetPivot.position.copy(HELMET_WORN_OFFSET);
+  subject.add(helmetPivot);
+
+  /* ---- environment ------------------------------------------------------- */
+  const pmrem = new PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  let envMap = null;
+  try {
+    const { RGBELoader } = await import("three/addons/loaders/RGBELoader.js");
+    const hdr = await new RGBELoader().loadAsync(ASSET_BASE_URL + "/hero/scene/studio-light.hdr");
+    envMap = pmrem.fromEquirectangular(hdr).texture;
+    hdr.dispose();
+  } catch {
+    const { RoomEnvironment } = await import("three/addons/environments/RoomEnvironment.js");
+    envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  }
+  scene.environment = envMap;
+
+  /* ---- the helmet: Draco glb, or a stand-in built from primitives --------- */
+  async function loadHelmet() {
+    try {
+      const [{ GLTFLoader }, { DRACOLoader }] = await Promise.all([
+        import("three/addons/loaders/GLTFLoader.js"),
+        import("three/addons/loaders/DRACOLoader.js"),
+      ]);
+      const draco = new DRACOLoader();
+      draco.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/libs/draco/gltf/");
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(draco);
+      const gltf = await loader.loadAsync(ASSET_BASE_URL + "/hero/scene/helmet3.glb");
+      const meshes = [];
+      gltf.scene.traverse((o) => { if (o.isMesh) meshes.push(o); });
+      if (!meshes.length) throw new Error("empty");
+      return { root: gltf.scene, meshes };
+    } catch {
+      const { mergeGeometries } = await import("three/addons/utils/BufferGeometryUtils.js");
+      const shell = new SphereGeometry(1, 34, 22);
+      shell.scale(1, 1.06, 1.12);
+      const jaw = new SphereGeometry(0.92, 30, 18, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.55);
+      jaw.scale(1.02, 1.25, 1.16);
+      jaw.translate(0, -0.28, 0.06);
+      const trim = new TorusGeometry(0.86, 0.045, 8, 40);
+      trim.rotateX(Math.PI * 0.5);
+      trim.scale(1.02, 1, 1.1);
+      trim.translate(0, 0.02, 0.16);
+      const fin = new BoxGeometry(0.1, 0.34, 0.7);
+      fin.translate(0, 0.86, -0.28);
+      const geo = mergeGeometries([shell, jaw, trim, fin], false);
+      const mat = new MeshStandardMaterial({ color: 0xc9a227, metalness: 0.92, roughness: 0.27 });
+      const mesh = new Mesh(geo, mat);
+      const root = new Group();
+      root.add(mesh);
+      return { root, meshes: [mesh] };
+    }
+  }
+
+  const helmetAsset = await loadHelmet();
+  const helmet = helmetAsset.root;
+
+  /* size the helmet to the head and centre it on its own pivot */
+  {
+    const box = new Box3().setFromObject(helmet);
+    const size = new Vector3(); box.getSize(size);
+    const center = new Vector3(); box.getCenter(center);
+    const k = (HEAD_HEIGHT * 0.42) / Math.max(size.y, 1e-4);
+    helmet.scale.setScalar(k);
+    helmet.position.set(-center.x * k, -center.y * k, -center.z * k);
+  }
+  helmetPivot.add(helmet);
+
+  const helmetMats = [];
+  for (const m of helmetAsset.meshes) {
+    const mat = m.material.isMaterial ? m.material : new MeshStandardMaterial();
+    mat.side = FrontSide;
+    mat.transparent = true;
+    mat.depthWrite = false;
+    mat.envMapIntensity = 1.3;
+    mat.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, U, { uAccent: { value: ACCENT }, uBurnGlow: { value: params.burnGlow } });
+      shader.fragmentShader = withN(REVEAL_GLSL + "uniform vec3 uAccent;\nuniform float uBurnGlow;\n" + shader.fragmentShader)
+        .replace("#include <dithering_fragment>", /* glsl */ `
+          #include <dithering_fragment>
+          float intact = burnIntact();
+          float rev = revealMask();
+          float vis = max(intact, rev);
+          /* a glow of 4 * intact * (1 - intact) in the accent along the front */
+          float glow = uBurnGlow * intact * (1.0 - intact);
+          gl_FragColor.rgb += uAccent * glow;
+          gl_FragColor.a *= vis;
+          if (gl_FragColor.a < 0.004) discard;
+        `);
+    };
+    mat.needsUpdate = true;
+    m.material = mat;
+    m.renderOrder = 2;
+    helmetMats.push(mat);
+  }
+
+  /* ---- the wireframe wave: the helmet's own geometry, same pivot ---------- */
+  let wireframe = null;
+  const waveU = {
+    uWaves: { value: [-1, -1, -1] },
+    uWaveWidth: { value: params.waveWidth },
+    uWavePeak: { value: params.wavePeak },
+    uWaveOn: { value: 0 },
+    uWireColor: { value: FG.clone().lerp(new Color(1, 1, 1), 0.64) },
+    uYRange: { value: new Vector2(-1, 1) },
+  };
+  if (tier.outline) {
+    const { mergeGeometries } = await import("three/addons/utils/BufferGeometryUtils.js");
+    const geos = helmetAsset.meshes.map((m) => {
+      const g = m.geometry.clone();
+      g.applyMatrix4(m.matrixWorld ? m.matrix : new THREE.Matrix4());
+      return g.index ? g.toNonIndexed() : g;
+    });
+    let merged = null;
+    try { merged = geos.length > 1 ? mergeGeometries(geos, false) : geos[0]; } catch { merged = geos[0]; }
+    if (merged) {
+      merged.computeBoundingBox();
+      waveU.uYRange.value.set(merged.boundingBox.min.y, merged.boundingBox.max.y);
+      const wire = new WireframeGeometry(merged);
+      const wireMat = new ShaderMaterial({
+        uniforms: waveU, transparent: true, depthWrite: false, depthTest: true,
+        vertexShader: /* glsl */ `
+          varying float vT;
+          uniform vec2 uYRange;
+          void main() {
+            vT = 1.0 - (position.y - uYRange.x) / max(uYRange.y - uYRange.x, 1e-4);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          varying float vT;
+          uniform float uWaves[3];
+          uniform float uWaveWidth, uWavePeak, uWaveOn;
+          uniform vec3 uWireColor;
+          void main() {
+            float a = 0.0;
+            for (int i = 0; i < 3; i++) {
+              float w = uWaves[i];
+              if (w < 0.0) continue;
+              float d = (vT - w) / uWaveWidth;
+              a = max(a, exp(-0.5 * d * d));
+            }
+            a *= uWavePeak * uWaveOn;
+            if (a < 0.002) discard;
+            gl_FragColor = vec4(uWireColor, a);
+          }
+        `,
+      });
+      wireframe = new LineSegments(wire, wireMat);
+      wireframe.scale.copy(helmet.scale);
+      wireframe.position.copy(helmet.position);
+      wireframe.renderOrder = 3;
+      helmetPivot.add(wireframe);
+    }
+  }
+
+  /* ---- state ------------------------------------------------------------- */
+  const pointerRaw = new Vector2(STATIC_POSE.x, STATIC_POSE.y);
+  const pointerA = new Vector2(STATIC_POSE.x, STATIC_POSE.y);
+  const pointerB = new Vector2(STATIC_POSE.x, STATIC_POSE.y);
+  const smoothed = new Vector2(STATIC_POSE.x, STATIC_POSE.y);
+  let pace = 0, aspect = 1;
+  let introStart = -1, riseStart = -1;
+  let waves = [], sinceSpawn = 0, lastTime = -1;
+  let readyCb = null, disposed = false;
+
+  function resize() {
+    const w = Math.max(1, section.clientWidth);
+    const h = Math.max(1, section.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier.maxDpr));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    aspect = w / h;
+    U.uResolution.value.set(canvas.width, canvas.height);
+    bgUniforms.uAspect.value = aspect;
+    // the backdrop fills the frustum at its own depth
+    const dz = camera.position.z - backdrop.position.z;
+    const bh = visibleWorldHeight(dz);
+    backdrop.scale.set(bh * aspect, bh, 1);
+    applyFit();
+  }
+
+  function applyFit() {
+    const s = section.getBoundingClientRect();
+    const next = Object.assign({}, DEFAULT_PARAMS);
+    if (fitbox && fitbox.offsetParent !== null) {
+      const b = fitbox.getBoundingClientRect();
+      Object.assign(next, fitSubjectToBox(DEFAULT_PARAMS, { top: b.top - s.top, height: b.height }, section.clientHeight));
+    }
+    // Every touch width, not just phones: a parked cursor reveal reads as a blob.
+    if (window.matchMedia("(max-width: 1023px)").matches) next.bgRevealOpacity = 0;
+    // Where there is no pointer the reveal is driven for the reader by the sweep.
+    if (window.matchMedia("(hover: none)").matches) next.autoSweepAmount = 0.76;
+    // The brush is sized for the screen.
+    if (window.matchMedia("(max-width: 639px)").matches) {
+      next.sweepRadius = 0.95; next.sweepWarp = 0.18; next.autoSweepAmount = 0.55;
+    }
+    // Last, because it overrides the two above.
+    if (!tier.reveal) next.autoSweepAmount = 0;
+    setParams(next);
+  }
+
+  function setParams(p) {
+    Object.assign(params, p);
+    subject.scale.setScalar(params.subjectScale);
+    subject.position.y = params.subjectY;
+    camera.position.z = params.cameraZ;
+    U.uSweepRadius.value = params.sweepRadius;
+    U.uRevealWarp.value = params.revealWarp;
+    U.uWarpScale.value = params.revealWarpScale;
+    U.uBurnSoft.value = params.burnSoft;
+    bgUniforms.uBgReveal.value = params.bgRevealOpacity;
+  }
+
+  /* ---- frame ------------------------------------------------------------- */
+  const easeOutQuad = (t) => 1 - (1 - t) * (1 - t);
+
+  function frame(time) {
+    const dt = lastTime < 0 ? 16 : Math.min(64, time - lastTime);
+    lastTime = time;
+    const t = time / 1000;
+    U.uTime.value = t;
+
+    if (introStart < 0) introStart = time;
+    U.uIntro.value = Math.min(1, (time - introStart) / (params.introSeconds * 1000));
+
+    /* the rise: 200 CSS px into place over 2s, ease-out quad */
+    if (riseStart >= 0) {
+      const p = Math.min(1, (time - riseStart) / (params.riseSeconds * 1000));
+      const perPx = visibleWorldHeight(params.cameraZ) / Math.max(1, section.clientHeight);
+      composition.position.y = -params.riseCssPx * perPx * (1 - easeOutQuad(p));
+    }
+
+    /* pointer: two cascaded filters, so the helmet leans rather than snaps */
+    const target = tier.pointerEnabled ? pointerRaw : STATIC_POSE;
+    pointerA.x += (target.x - pointerA.x) * params.pointerLerp;
+    pointerA.y += (target.y - pointerA.y) * params.pointerLerp;
+    pointerB.x += (pointerA.x - pointerB.x) * params.pointerLerp;
+    pointerB.y += (pointerA.y - pointerB.y) * params.pointerLerp;
+
+    /* eased pointer speed against a peak of 0.029 NDC per frame */
+    const dx = pointerA.x - smoothed.x, dy = pointerA.y - smoothed.y;
+    const speed = Math.min(1, Math.hypot(dx, dy) / params.pacePeak);
+    const k = speed > pace ? params.paceAttack : params.paceRelease;
+    pace += (speed - pace) * k;
+    smoothed.set(pointerA.x, pointerA.y);
+
+    /* the trail, in the shader's aspect-corrected space */
+    trail.pop();
+    trail.unshift(new Vector2(pointerA.x * aspect, pointerA.y));
+    U.uTrail.value = trail;
+
+    const gate = (() => {
+      const x = Math.min(1, Math.max(0, (pace - 0.06) / (0.21 - 0.06)));
+      return x * x * (3 - 2 * x);
+    })();
+    U.uGate.value = tier.reveal ? gate : 0;
+    U.uBrush.value = params.brushRadius * (params.brushIdle + (1 - params.brushIdle) * pace);
+    U.uTaper.value = params.taperBase * (params.taperIdle + (params.taperFast - params.taperIdle) * pace);
+
+    /* the idle sweep that stands in for a cursor where there is none */
+    if (params.autoSweepAmount > 0) {
+      const ph = (t * 0.42) % 1;
+      const ax = Math.sin(ph * Math.PI * 2) * 0.5 * aspect;
+      const ay = Math.cos(ph * Math.PI * 2 * 0.5) * 0.35 - 0.05;
+      U.uSweepA.value.set(ax, ay);
+      U.uSweepB.value.set(ax - Math.cos(ph * Math.PI * 2) * 0.14 * aspect, ay + 0.1);
+      U.uSweepAmount.value = params.autoSweepAmount;
+    } else {
+      U.uSweepAmount.value = 0;
+    }
+
+    /* the helmet leans about its own centre */
+    helmetPivot.rotation.x = swing(pointerB.y, params.helmetPitchDeg, params.helmetCurve);
+    helmetPivot.rotation.y = swing(pointerB.x, params.helmetYawDeg, params.helmetCurve);
+
+    /* the whole subject slides with the cursor */
+    subject.position.x = -pointerB.x * params.subjectParallax * 10;
+    headUniforms.uPointer.value.set(pointerB.x, pointerB.y);
+
+    /* the wireframe wave, spawned every 1.2s, travelling crown to chin in 3.1s,
+       fading in on the burn's own curve so shell and outline never coexist */
+    if (wireframe) {
+      sinceSpawn += dt;
+      if (sinceSpawn >= params.waveSpawn * 1000) { sinceSpawn = 0; waves.push(0); }
+      waves = waves.map((w) => w + dt / (params.waveSeconds * 1000)).filter((w) => w <= 1.2).slice(-3);
+      const slots = [-1, -1, -1];
+      waves.forEach((w, i) => { slots[i] = w; });
+      waveU.uWaves.value = slots;
+      waveU.uWaveOn.value = Math.min(1, Math.max(0, smoothstep01(0.14, 1, U.uIntro.value)));
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  function smoothstep01(a, b, x) {
+    const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+
+  /* ---- the loop: only while the hero is in view, the tab is visible and the
+     scroll has not carried past it ---------------------------------------- */
+  let inView = true, grace = 10, frozen = false;
+  const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) grace = 10; }, { rootMargin: "0px" });
+  io.observe(section);
+
+  const stopLoop = subscribe((time) => {
+    if (disposed) return;
+    if (document.hidden) return;
+    if (!inView) { if (grace <= 0) return; grace -= 1; }
+    if (window.scrollY > window.innerHeight * 1.15) return;
+    if (frozen) return;
+    frame(time);
+    if (tier.freeze && U.uIntro.value >= 1) frozen = true;
+  }, () => tier.frameInterval);
+
+  /* ---- pointer ----------------------------------------------------------- */
+  let pointerBound = false;
+  const onPointer = (e) => {
+    pointerRaw.set((e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1);
+  };
+  function bindPointer() {
+    if (tier.pointerEnabled && !pointerBound) { window.addEventListener("pointermove", onPointer, { passive: true }); pointerBound = true; }
+    if (!tier.pointerEnabled && pointerBound) { window.removeEventListener("pointermove", onPointer); pointerBound = false; }
+  }
+  bindPointer();
+
+  /* ---- resize / retune --------------------------------------------------- */
+  let lastW = -1;
+  const coarseQ = window.matchMedia("(hover: none) and (pointer: coarse)");
+  function retune() {
+    tier = getSceneTier();
+    bindPointer();
+    resize();
+  }
+  let roQueued = false;
+  const ro = new ResizeObserver(() => {
+    if (roQueued) return;
+    roQueued = true;
+    requestAnimationFrame(() => {
+      roQueued = false;
+      const w = section.clientWidth;
+      // Height-only changes on a coarse pointer are the iOS URL bar: ignore.
+      if (w !== lastW) { lastW = w; retune(); } else if (!tier.coarsePointer) resize();
+    });
+  });
+  ro.observe(section);
+  coarseQ.addEventListener("change", retune);
+  resize();
+
+  /* ---- prewarm: upload every texture, compile every program, one throwaway
+     frame — then ready ---------------------------------------------------- */
+  for (const tx of [maps.diffuse, maps.alpha, maps.depth, maps.normal, noiseTex]) {
+    try { renderer.initTexture(tx); } catch { /* older/newer builds drop initTexture */ }
+  }
+  try { await renderer.compileAsync(scene, camera); } catch { renderer.compile(scene, camera); }
+  renderer.render(scene, camera);
+
+  return {
+    get tier() { return tier; },
+    onReady(cb) { readyCb = cb; cb && cb(); },
+    beginRise() { riseStart = performance.now(); },
+    setPointer(x, y) { pointerRaw.set(x, y); },
+    setParams,
+    retune,
+    dispose() { disposed = true; stopLoop(); io.disconnect(); ro.disconnect(); renderer.dispose(); },
+  };
+}
+
+/* boot the scene; if WebGL or the CDN is unavailable the loader still resolves
+   and the page runs without it. */
+(async () => {
+  const canvas = document.querySelector("[data-hero-canvas]");
+  const section = document.querySelector("[data-hero]");
+  const fitbox = document.querySelector("[data-hero-fitbox]");
+  let scene = null;
+  try {
+    scene = await createHeroScene(canvas, section, fitbox);
+  } catch (err) {
+    console.warn("[hero] scene unavailable:", err && err.message);
+    canvas.style.display = "none";
+  }
+  veil.onHandover(() => {
+    heroEntrance();
+    if (scene) scene.beginRise();
+  });
+  veil.onReady();
+})();
+
+/* ---------------------------------------------------------------------------
+   Text outside the hero — split once, played in when the block arrives.
+   ------------------------------------------------------------------------ */
+for (const el of document.querySelectorAll("[data-text]")) {
+  if (el.closest("[data-hero]")) continue;
+  const t = splitText(el);
+  inViewOnce(el, () => t.enable(true), "0% 0% -12% 0%");
+}
+
+/* ---------------------------------------------------------------------------
+   2 — THE SEASON MAP
+   An instrument-panel map drawn at 2560x1440: an 8,004-dot halftone landmass,
+   dashed grid axes that crawl, a hub with three rings and a slow ping, and the
+   filled track ribbon the circuit trace runs on.
+   ------------------------------------------------------------------------ */
+const MAP_W = 2560, MAP_H = 1440;
+
+/* deterministic value noise, so the landmass is the same every load */
+function seeded(seed) {
+  let s = seed >>> 0;
+  return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+}
+
+function catmull(points, samples) {
+  const out = [];
+  const n = points.length;
+  for (let i = 0; i < n; i++) {
+    const p0 = points[(i - 1 + n) % n], p1 = points[i], p2 = points[(i + 1) % n], p3 = points[(i + 2) % n];
+    for (let j = 0; j < samples; j++) {
+      const t = j / samples, t2 = t * t, t3 = t2 * t;
+      out.push([
+        0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+        0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3),
+      ]);
+    }
+  }
+  return out;
+}
+
+/* the designer's own track ribbon, clockwise from the chequered flag */
+const TRACK_CONTROL = [
+  [0.205, 0.735], [0.150, 0.640], [0.163, 0.520], [0.238, 0.452], [0.318, 0.418],
+  [0.360, 0.330], [0.330, 0.235], [0.392, 0.170], [0.492, 0.168], [0.560, 0.232],
+  [0.604, 0.330], [0.686, 0.360], [0.782, 0.348], [0.848, 0.410], [0.845, 0.512],
+  [0.772, 0.572], [0.700, 0.628], [0.712, 0.722], [0.640, 0.796], [0.532, 0.808],
+  [0.436, 0.772], [0.330, 0.786], [0.252, 0.800],
+].map(([x, y]) => [x * MAP_W, y * MAP_H]);
+
+const TURN_MARKS = [
+  { at: 0.075, label: "t1" },
+  { at: 0.300, label: "t5" },
+  { at: 0.545, label: "t9" },
+  { at: 0.790, label: "t15" },
+];
+
+function createSeasonMap(canvas, section) {
+  const ctx = canvas.getContext("2d");
+  const accent = readToken("--accent");
+  const dotCol = readToken("--map-dot");
+  const gridCol = readToken("--map-grid");
+  const ghostCol = readToken("--map-grid-ghost");
+  const markCol = readToken("--map-mark");
+
+  /* ---- the halftone landmass: 8,004 dots on a 20px lattice --------------- */
+  const STEP = 12;
+  const rnd = seeded(0x9e3779b9);
+  const jit = [];
+  for (let i = 0; i < 4096; i++) jit.push(rnd());
+  const field = (x, y) => {
+    const u = x / MAP_W, v = y / MAP_H;
+    return (
+      Math.sin(u * 6.1 + 0.7) * 0.5 +
+      Math.sin(v * 4.3 - 1.2) * 0.4 +
+      Math.sin((u + v) * 5.4) * 0.3 +
+      Math.sin((u - v) * 8.9 + 2.1) * 0.22 +
+      (1 - Math.hypot(u - 0.5, (v - 0.5) * 1.5) * 1.7) * 0.9
+    );
+  };
+  const candidates = [];
+  let ji = 0;
+  for (let y = STEP; y < MAP_H; y += STEP) {
+    for (let x = STEP; x < MAP_W; x += STEP) {
+      const f = field(x, y) + (jit[(ji++) % jit.length] - 0.5) * 0.22;
+      candidates.push({ x, y, f });
+    }
+  }
+  candidates.sort((a, b) => b.f - a.f);
+  const DOTS = candidates.slice(0, 8004);
+  const fmin = DOTS[DOTS.length - 1].f, fmax = DOTS[0].f;
+  for (const d of DOTS) d.r = 0.8 + 1.9 * Math.min(1, Math.max(0, (d.f - fmin) / (fmax - fmin || 1)));
+
+  /* ---- the ribbon --------------------------------------------------------- */
+  const PATH = catmull(TRACK_CONTROL, 26);
+  const N = PATH.length;
+  const seg = [], cum = [0];
+  for (let i = 0; i < N; i++) {
+    const a = PATH[i], b = PATH[(i + 1) % N];
+    const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    seg.push(d); cum.push(cum[i] + d);
+  }
+  const TOTAL = cum[N];
+  /* curvature -> speed: brake through the corners, run away down the straights */
+  const speed = [];
+  for (let i = 0; i < N; i++) {
+    const a = PATH[(i - 4 + N) % N], b = PATH[i], c = PATH[(i + 4) % N];
+    const v1x = b[0] - a[0], v1y = b[1] - a[1], v2x = c[0] - b[0], v2y = c[1] - b[1];
+    const a1 = Math.atan2(v1y, v1x), a2 = Math.atan2(v2y, v2x);
+    let da = Math.abs(a2 - a1); if (da > Math.PI) da = Math.PI * 2 - da;
+    speed.push(1 / (1 + da * 3.4));
+  }
+  /* time parameterisation, normalised to one 6-second lap */
+  const tcum = [0];
+  for (let i = 0; i < N; i++) tcum.push(tcum[i] + seg[i] / Math.max(speed[i], 0.08));
+  const TTOTAL = tcum[N];
+  const indexAtTime = (p) => {
+    const target = p * TTOTAL;
+    let lo = 0, hi = N;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (tcum[mid] < target) lo = mid + 1; else hi = mid; }
+    return Math.max(0, lo - 1);
+  };
+
+  /* ---- static layer: halftone + ribbon ----------------------------------- */
+  const base = document.createElement("canvas");
+  base.width = MAP_W; base.height = MAP_H;
+  {
+    const b = base.getContext("2d");
+    b.fillStyle = dotCol;
+    for (const d of DOTS) { b.beginPath(); b.arc(d.x, d.y, d.r, 0, Math.PI * 2); b.fill(); }
+    b.beginPath();
+    b.moveTo(PATH[0][0], PATH[0][1]);
+    for (let i = 1; i < N; i++) b.lineTo(PATH[i][0], PATH[i][1]);
+    b.closePath();
+    b.lineJoin = "round"; b.lineCap = "round";
+    b.strokeStyle = "#14161a"; b.lineWidth = 30; b.stroke();
+    b.strokeStyle = ghostCol; b.lineWidth = 24; b.stroke();
+    b.strokeStyle = "#0b0c0e"; b.lineWidth = 2; b.setLineDash([10, 14]); b.stroke();
+    b.setLineDash([]);
+  }
+
+  /* ---- state -------------------------------------------------------------- */
+  let dpr = 1, cw = 1, ch = 1, sx = 1, ox = 0, oy = 0;
+  let lapStart = -1, lapDone = 0, cool = 0;
+  const cursor = { x: -9999, y: -9999, on: false };
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cw = Math.max(1, section.clientWidth); ch = Math.max(1, section.clientHeight);
+    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
+    // cover
+    sx = Math.max(cw / MAP_W, ch / MAP_H);
+    ox = (cw - MAP_W * sx) / 2; oy = (ch - MAP_H * sx) / 2;
+  }
+  resize();
+  new ResizeObserver(resize).observe(section);
+
+  section.addEventListener("pointermove", (e) => {
+    const r = section.getBoundingClientRect();
+    cursor.x = (e.clientX - r.left - ox) / sx;
+    cursor.y = (e.clientY - r.top - oy) / sx;
+    cursor.on = true;
+  }, { passive: true });
+  section.addEventListener("pointerleave", () => { cursor.on = false; }, { passive: true });
+
+  /* ---- frame -------------------------------------------------------------- */
+  function draw(time) {
+    const t = time / 1000;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#090a0b";
+    ctx.fillRect(0, 0, cw, ch);
+    ctx.save();
+    ctx.translate(ox, oy); ctx.scale(sx, sx);
+
+    ctx.drawImage(base, 0, 0);
+
+    /* dashed grid axes, crawling */
+    ctx.strokeStyle = gridCol; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.55;
+    ctx.setLineDash([18, 26]);
+    ctx.lineDashOffset = -(t * 26) % 44;
+    ctx.beginPath();
+    for (let i = 1; i < 6; i++) { const y = (MAP_H / 6) * i; ctx.moveTo(0, y); ctx.lineTo(MAP_W, y); }
+    ctx.stroke();
+    ctx.lineDashOffset = (t * 22) % 44;
+    ctx.beginPath();
+    for (let i = 1; i < 10; i++) { const x = (MAP_W / 10) * i; ctx.moveTo(x, 0); ctx.lineTo(x, MAP_H); }
+    ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+    /* the hub: three rings and a slow ping */
+    const hub = [MAP_W * 0.845, MAP_H * 0.512];
+    ctx.strokeStyle = ghostCol; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(hub[0], hub[1], 118, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(hub[0], hub[1], 78, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = gridCol;
+    ctx.beginPath(); ctx.arc(hub[0], hub[1], 34, 0, Math.PI * 2); ctx.stroke();
+    const ping = (t * 0.22) % 1;
+    ctx.globalAlpha = (1 - ping) * 0.5;
+    ctx.strokeStyle = accent; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(hub[0], hub[1], 34 + ping * 150, 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    /* the chequered flag at the start line */
+    const flag = PATH[0];
+    ctx.save();
+    ctx.translate(flag[0], flag[1]);
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 2; c++) {
+      ctx.fillStyle = (r + c) % 2 ? markCol : "#111316";
+      ctx.fillRect(-24 + c * 12, -24 + r * 12, 12, 12);
+    }
+    ctx.restore();
+
+    /* the lap */
+    let head = -1;
+    if (lapStart >= 0) {
+      const p = Math.min(1, (time - lapStart) / 6000);
+      head = indexAtTime(p);
+      if (p >= 1 && !lapDone) { lapDone = time; }
+      const count = p >= 1 ? N : head;
+
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      const glow = lapDone ? Math.max(0, 1 - (time - lapDone) / 1200) : 1;
+      ctx.strokeStyle = accent;
+      ctx.lineJoin = "round"; ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(PATH[0][0], PATH[0][1]);
+      for (let i = 1; i <= count; i++) ctx.lineTo(PATH[i % N][0], PATH[i % N][1]);
+      if (p >= 1) ctx.closePath();
+      ctx.globalAlpha = 0.22 * glow; ctx.lineWidth = 26; ctx.stroke();
+      ctx.globalAlpha = 0.42 * glow; ctx.lineWidth = 12; ctx.stroke();
+      ctx.globalAlpha = 1; ctx.lineWidth = 5; ctx.stroke();
+
+      /* the white filament at the hot head */
+      if (p < 1) {
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4;
+        ctx.beginPath();
+        const from = Math.max(0, head - 9);
+        ctx.moveTo(PATH[from][0], PATH[from][1]);
+        for (let i = from + 1; i <= head; i++) ctx.lineTo(PATH[i][0], PATH[i][1]);
+        ctx.stroke();
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath(); ctx.arc(PATH[head][0], PATH[head][1], 7, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+
+      /* turn markers light as the trace passes them */
+      ctx.font = "600 26px 'Space Grotesk', sans-serif";
+      for (const m of TURN_MARKS) {
+        const idx = Math.floor(m.at * N);
+        const lit = p >= 1 || head >= idx;
+        const pt = PATH[idx];
+        ctx.strokeStyle = lit ? accent : gridCol;
+        ctx.fillStyle = lit ? accent : gridCol;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], 16, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], 4, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = lit ? 1 : 0.5;
+        ctx.fillText(m.label, pt[0] + 24, pt[1] - 18);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    /* the reticle: two arms along the lattice, dots squaring up where they cross */
+    if (cursor.on && lapDone) {
+      const rx = Math.round(cursor.x / STEP) * STEP;
+      const ry = Math.round(cursor.y / STEP) * STEP;
+      ctx.strokeStyle = accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, ry); ctx.lineTo(MAP_W, ry);
+      ctx.moveTo(rx, 0); ctx.lineTo(rx, MAP_H);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      const R = 190;
+      ctx.fillStyle = accent;
+      for (const d of DOTS) {
+        const onRow = Math.abs(d.y - ry) < STEP * 0.6, onCol = Math.abs(d.x - rx) < STEP * 0.6;
+        if (!onRow && !onCol) continue;
+        const dist = Math.hypot(d.x - rx, d.y - ry);
+        if (dist > R * 3) continue;
+        const cheq = (Math.round(d.x / STEP) + Math.round(d.y / STEP)) % 2 === 0;
+        const s = d.r * 2.1;
+        ctx.globalAlpha = cheq ? 1 : 0.35;
+        ctx.fillRect(d.x - s / 2, d.y - s / 2, s, s);
+      }
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = accent; ctx.lineWidth = 2;
+      ctx.strokeRect(rx - 14, ry - 14, 28, 28);
+    }
+
+    ctx.restore();
+  }
+
+  let inView = false, grace = 10;
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) grace = 10; }).observe(section);
+  subscribe((time) => {
+    if (!inView) { if (grace <= 0) return; grace -= 1; }
+    draw(time);
+  }, () => (REDUCED ? 100 : 0));
+
+  return { start() { if (lapStart < 0) lapStart = performance.now(); } };
+}
+
+(function seasonBlock() {
+  const section = document.querySelector("[data-season]");
+  const map = createSeasonMap(document.querySelector("[data-season-map]"), section);
+  inViewOnce(section, () => map.start(), "0% 0% -30% 0%");
+
+  /* ---- the seam: a chequered flag coming apart -------------------------- */
+  const seam = document.querySelector("[data-season-seam]");
+  const sctx = seam.getContext("2d");
+  const bg = readToken("--background");
+  const rnd = seeded(0x5bf03635);
+  const jitter = [];
+  for (let i = 0; i < 4096; i++) jitter.push(rnd());
+  let sw = 1, sh = 1, sdpr = 1, cell = 40, cols = 1, rows = 1, progress = 0;
+
+  function sizeSeam() {
+    sdpr = Math.min(window.devicePixelRatio || 1, 2);
+    sw = Math.max(1, seam.clientWidth); sh = Math.max(1, seam.clientHeight);
+    seam.width = Math.round(sw * sdpr); seam.height = Math.round(sh * sdpr);
+    cell = Math.max(24, Math.round(sw / 32));
+    cols = Math.ceil(sw / cell); rows = Math.ceil(sh / cell);
+    paintSeam();
+  }
+  function paintSeam() {
+    sctx.setTransform(sdpr, 0, 0, sdpr, 0, 0);
+    sctx.clearRect(0, 0, sw, sh);
+    sctx.fillStyle = bg;
+    const p = progress;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        // the top rows stay solid longest; the seam burns off from the bottom up
+        const bias = 1 - r / Math.max(1, rows - 1);
+        const j = jitter[(r * 97 + c * 31) % jitter.length];
+        const odd = (r + c) % 2 === 1;
+        // the odd cells go first, so solid rows break into a chequerboard
+        const life = (odd ? bias * 0.46 : bias * 0.70 + 0.06) + j * 0.12;
+        if (p < life) sctx.fillRect(c * cell, r * cell, cell + 0.5, cell + 0.5);
+      }
+    }
+  }
+  sizeSeam();
+  new ResizeObserver(sizeSeam).observe(seam);
+  scrollTrigger(section, {
+    start: "top_bottom", end: "top_top",
+    onProgress: (p) => { if (Math.abs(p - progress) > 0.002) { progress = p; paintSeam(); } },
+  });
+})();
+
+/* ---------------------------------------------------------------------------
+   3 — THE TIMELINE
+   ------------------------------------------------------------------------ */
+(function timeline() {
+  const section = document.querySelector("[data-timeline]");
+  const rowsWrap = document.querySelector("[data-tl-rows]");
+  const thread = document.querySelector("[data-tl-thread]");
+  const marker = document.querySelector("[data-tl-marker]");
+  const rows = Array.from(document.querySelectorAll("[data-tl-row]"));
+
+  /* the rail's progress thread and the square marker, five turns over the block */
+  scrollTrigger(rowsWrap, {
+    start: "top_bottom", end: "bottom_bottom",
+    onProgress: (p) => {
+      thread.style.transform = "scaleY(" + p + ")";
+      marker.style.top = (p * 100) + "%";
+      marker.style.transform = "translate(-50%,-50%) rotate(" + (p * 5 * 360) + "deg)";
+    },
+  });
+
+  rows.forEach((row, i) => {
+    const plate = row.querySelector(".tl__plate");
+    const img = row.querySelector(".tl__plate img");
+    const year = row.querySelector("[data-tl-year]");
+    const label = row.querySelector(".tl__label");
+    const note = row.querySelector(".tl__note");
+
+    /* the plate's inset wipe — one of the page's only CSS transitions */
+    const wipe = document.createElement("span");
+    wipe.style.cssText = "position:absolute;inset:0;z-index:4;background:var(--surface-dark);transition:inset var(--duration-plate) var(--ease-plate)";
+    plate.appendChild(wipe);
+
+    /* the year assembles letter by letter, then settles back to 40% */
+    const text = year.textContent;
+    year.textContent = "";
+    const sr = document.createElement("span"); sr.className = "sr-only"; sr.textContent = text;
+    const wrap = document.createElement("span"); wrap.className = "tx tx--letters"; wrap.setAttribute("aria-hidden", "true");
+    year.append(sr, wrap);
+    const letters = Array.from(text).map((ch) => {
+      const s = document.createElement("span"); s.textContent = ch; wrap.appendChild(s); return s;
+    });
+    const letterAnims = letters.map((s, k) => makeAnim(s, {
+      from: LETTER_OUT, to: LETTER_IN, config: CFG.YEAR, delay: 120 + k * 70, mode: "once" }));
+    const settle = makeAnim(year, { from: { opacity: 1 }, to: { opacity: 0.4 }, config: CFG.YEAR_SETTLE, delay: 120 + letters.length * 70 + 520, mode: "once" });
+
+    const copy = [
+      makeAnim(label, { from: { opacity: 0, y: "0.6rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.ROW, delay: 160, mode: "once" }),
+      makeAnim(note, { from: { opacity: 0, y: "0.6rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.COPY, delay: 260, mode: "once" }),
+    ];
+
+    inViewOnce(row, () => {
+      wipe.style.inset = "0 0 100% 0";
+      letterAnims.forEach((a) => a.enable(true));
+      settle.enable(true);
+      copy.forEach((a) => a.enable(true));
+    }, "0% 0% -25% 0%");
+
+    /* three parallax layers per row */
+    scrollTrigger(row, {
+      start: "top_bottom", end: "bottom_top",
+      onProgress: (p) => {
+        const q = (p - 0.5) * 2;
+        if (img) img.style.transform = "translateY(" + (q * -4.2) + "%)";
+        year.style.setProperty("--py", (q * -1.6) + "rem");
+        year.style.marginTop = "0";
+        label.style.transform = "translateY(" + (q * -0.9) + "rem)";
+        note.style.transform = "translateY(" + (q * -0.4) + "rem)";
+      },
+    });
+
+    /* a hover dims every other row */
+    row.addEventListener("pointerenter", () => {
+      section.classList.add("is-hovering");
+      rows.forEach((r) => r.classList.toggle("is-active", r === row));
+    });
+    row.addEventListener("pointerleave", () => {
+      section.classList.remove("is-hovering");
+      row.classList.remove("is-active");
+    });
+  });
+})();
+
+/* ---------------------------------------------------------------------------
+   Contour fields, drawn by marching squares. The same analytic four-sine field
+   as the hero backdrop, on a canvas — ink at 8% for the paddock, white for the
+   footer (the element carries the 10%).
+   ------------------------------------------------------------------------ */
+function contourField(x, y, t) {
+  const px = x + Math.sin(y * 1.3 + t * 0.58) * 0.37;
+  const py = y + Math.sin(x * 1.1 - t * 0.48) * 0.37;
+  return Math.sin(px) + Math.sin(py * 1.27 + t * 0.1) + Math.sin((px + py) * 0.63 - t * 0.07) + Math.sin((px - py) * 0.91 + t * 0.04);
+}
+
+function createContours(canvas, host, stroke, levels = 9) {
+  const ctx = canvas.getContext("2d");
+  let w = 1, h = 1, dpr = 1, cols = 0, rowsN = 0, cell = 22, vals = null;
+
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = Math.max(1, host.clientWidth); h = Math.max(1, host.clientHeight);
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    cell = Math.max(16, Math.round(Math.min(w, h) / 40));
+    cols = Math.ceil(w / cell) + 1; rowsN = Math.ceil(h / cell) + 1;
+    vals = new Float32Array(cols * rowsN);
+  }
+  size();
+  new ResizeObserver(size).observe(host);
+
+  const SCALE = 3.8;
+  function draw(time) {
+    const t = time / 1000;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const aspect = w / h;
+    // evaluate the field once per grid vertex, then run the levels off the cache
+    for (let j = 0; j < rowsN; j++) {
+      for (let i = 0; i < cols; i++) {
+        const u = (i * cell / w - 0.5) * SCALE * aspect;
+        const v = (j * cell / h - 0.5) * SCALE;
+        vals[j * cols + i] = contourField(u, v, t);
+      }
+    }
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let L = 0; L < levels; L++) {
+      const iso = -2.2 + (4.4 * L) / (levels - 1);
+      for (let j = 0; j < rowsN - 1; j++) {
+        for (let i = 0; i < cols - 1; i++) {
+          const a = vals[j * cols + i], b = vals[j * cols + i + 1];
+          const c = vals[(j + 1) * cols + i + 1], d = vals[(j + 1) * cols + i];
+          let idx = 0;
+          if (a > iso) idx |= 8; if (b > iso) idx |= 4; if (c > iso) idx |= 2; if (d > iso) idx |= 1;
+          if (idx === 0 || idx === 15) continue;
+          const x0 = i * cell, y0 = j * cell, x1 = x0 + cell, y1 = y0 + cell;
+          const lerpx = (va, vb) => x0 + cell * ((iso - va) / (vb - va || 1e-6));
+          const lerpy = (va, vb) => y0 + cell * ((iso - va) / (vb - va || 1e-6));
+          const T = [lerpx(a, b), y0], R = [x1, lerpy(b, c)], B = [lerpx(d, c), y1], Lf = [x0, lerpy(a, d)];
+          const link = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
+          switch (idx) {
+            case 1: case 14: link(Lf, B); break;
+            case 2: case 13: link(B, R); break;
+            case 3: case 12: link(Lf, R); break;
+            case 4: case 11: link(T, R); break;
+            case 6: case 9:  link(T, B); break;
+            case 7: case 8:  link(Lf, T); break;
+            case 5: link(Lf, T); link(B, R); break;
+            case 10: link(T, R); link(Lf, B); break;
+          }
+        }
+      }
+    }
+    ctx.stroke();
+  }
+
+  let inView = false, grace = 10;
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) grace = 10; }).observe(host);
+  subscribe((time) => {
+    if (!inView) { if (grace <= 0) return; grace -= 1; }
+    draw(time);
+  }, () => (REDUCED ? 400 : 50));
+}
+
+/* ---------------------------------------------------------------------------
+   4 — THE PADDOCK
+   ------------------------------------------------------------------------ */
+(function paddock() {
+  const section = document.querySelector("[data-paddock]");
+  createContours(document.querySelector("[data-paddock-contours]"), section, readToken("--paddock-contour"), 9);
+
+  /* the crawling dashed connectors */
+  const lines = Array.from(document.querySelectorAll(".cal__connector line"));
+  subscribe((time) => {
+    const o = -(time / 1000 * 9) % 10;
+    for (const l of lines) l.style.strokeDashoffset = String(o);
+  }, () => 33);
+
+  /* the live round's pulse — a spring flipped on an interval, not a keyframe */
+  const pulse = document.querySelector("[data-cal-pulse]");
+  if (pulse) {
+    const s = Spring({ tension: 120, friction: 14 }, 0);
+    let up = true, last = -1, since = 0;
+    subscribe((time) => {
+      const dt = last < 0 ? 16 : Math.min(64, time - last);
+      last = time; since += dt;
+      if (since > 900) { since = 0; up = !up; s.to(up ? 1 : 0); }
+      s.step(dt);
+      pulse.style.transform = "translate(-50%,-50%) scale(" + (1 + s.value * 1.9) + ")";
+      pulse.style.opacity = String(1 - s.value * 0.75);
+    }, () => 0);
+  }
+
+  /* the calendar strip rises when it arrives */
+  const rounds = Array.from(document.querySelectorAll(".cal__round"));
+  const anims = rounds.map((r, i) => makeAnim(r, {
+    from: { opacity: 0, y: "1rem" }, to: { opacity: 1, y: "0rem" },
+    config: CFG.ITEM, delay: i * 90, mode: "once" }));
+  inViewOnce(document.querySelector("[data-calendar]"), () => anims.forEach((a) => a.enable(true)), "0% 0% -20% 0%");
+
+  /* the meta row and the button */
+  const late = [
+    ...Array.from(document.querySelectorAll(".pd__meta > div")).map((el, i) =>
+      makeAnim(el, { from: { opacity: 0, y: "0.6rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.ROW, delay: 200 + i * 90, mode: "once" })),
+    makeAnim(document.querySelector(".pd__btn"), {
+      from: { opacity: 0, y: "0.75rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.REVEAL, delay: 620, mode: "once" }),
+  ];
+  inViewOnce(document.querySelector(".pd__meta"), () => late.forEach((a) => a.enable(true)), "0% 0% -15% 0%");
+
+  /* the portrait drifts as the block passes */
+  const fig = document.querySelector(".pd__figure img");
+  if (fig) scrollTrigger(document.querySelector(".pd__figure"), {
+    start: "top_bottom", end: "bottom_top",
+    onProgress: (p) => { fig.style.transform = "scale(1.08) translateY(" + ((p - 0.5) * -3.4) + "%)"; },
+  });
+})();
+
+/* ---------------------------------------------------------------------------
+   5 — THE FOOTER
+   ------------------------------------------------------------------------ */
+(function footer() {
+  const section = document.querySelector("[data-footer]");
+  createContours(document.querySelector("[data-footer-contours]"), section, "#ffffff", 9);
+
+  /* the figure stands off the foot of the block and rides back into place */
+  const fig = document.querySelector("[data-footer-figure]");
+  fig.style.transform = "translateY(22%)";
+  scrollTrigger(section, {
+    start: "top_bottom", end: "bottom_bottom",
+    onProgress: (p) => { fig.style.transform = "translateY(" + (22 * (1 - p)) + "%)"; },
+  });
+
+  const legal = document.querySelector(".ft__legal");
+  const a = makeAnim(legal, { from: { opacity: 0, y: "0.6rem" }, to: { opacity: 1, y: "0rem" }, config: CFG.ROW, delay: 640, mode: "once" });
+  inViewOnce(legal, () => a.enable(true), "0px");
+})();
+</script>
+
+</body>
+</html>
