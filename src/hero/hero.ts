@@ -97,6 +97,8 @@ export function mountHero() {
   const beginEntrance = () => {
     items.forEach((a) => a.enable(true));
     runs.forEach((r) => r.enable(true));
+    // the page is up: anything waiting on the veil can move now
+    window.dispatchEvent(new CustomEvent("lando:handover"));
   };
 
   /* ---- the scene --------------------------------------------------------- */

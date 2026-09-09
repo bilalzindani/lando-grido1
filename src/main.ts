@@ -2,6 +2,7 @@ import Lenis from "lenis";
 import { subscribe, REDUCED } from "./lib/ticker";
 import { mountStack } from "./lib/stack";
 import { mountNav } from "./lib/nav";
+import { mountLinks } from "./lib/links";
 import { watchImage } from "./lib/fail";
 import { mountHero } from "./hero/hero";
 import { mountSeason } from "./season/season";
@@ -51,6 +52,11 @@ for (const panel of document.querySelectorAll("[data-brackets]")) {
 
 mountStack();
 mountNav(lenis);
+
+/* The design's links are real paths on a one-page site; route them to blocks. */
+const openDeepLink = mountLinks(lenis);
+window.addEventListener("lando:handover", () => openDeepLink(), { once: true });
+
 mountHero();
 mountSeason();
 mountTimeline();
