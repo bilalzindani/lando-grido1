@@ -50,6 +50,14 @@ The first three are a sticky stack: each pins and the next comes out over it.
 
 ## Assets
 
-Every image, texture and model is fetched from
-`https://storage.getlayers.ai/assets/lando-04a9449ab2/`, built from one
-`ASSET_BASE_URL` constant in `src/lib/assets.ts`.
+Every image, texture and model ships in `assets/`, served from the same origin
+as the page and built from one `ASSET_BASE_URL` constant in
+`src/lib/assets.ts`. `build.mjs` copies the tree into `dist/` beside the page.
+
+They came from `storage.getlayers.ai`, and that bucket was renamed under us
+mid-deploy (`lando-04a9449ab2` to `kimi-04a9449ab2`), which took the whole
+page's artwork down at once. A page whose subject lives on someone else's URL
+is one rename away from being blank, so the files are vendored here.
+
+three.js and Lenis are still pulled from jsDelivr through the import map, at
+pinned versions, as the specification requires.

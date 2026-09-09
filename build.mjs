@@ -8,7 +8,7 @@
  * template between the two markers.
  */
 import { build } from "esbuild";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 
 const EXTERNALS = ["three", "three/addons/*", "lenis"];
 
@@ -42,9 +42,11 @@ const html =
 
 await writeFile("index.html", html, "utf8");
 
-// dist/ is what the host serves — the same one file, nothing else.
+// dist/ is what the host serves: the page and the artwork it needs.
+await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 await writeFile("dist/index.html", html, "utf8");
+await cp("assets", "dist/assets", { recursive: true });
 
 const kb = (n) => (n / 1024).toFixed(1) + " kB";
 console.log("index.html  " + kb(Buffer.byteLength(html)) + "  (script " + kb(Buffer.byteLength(code)) + ")");
