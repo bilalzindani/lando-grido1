@@ -239,8 +239,29 @@ export function mountHero() {
     () => tier.frameInterval,
   );
 
-  s.onReady = () => veil.ready();
-  if (s.ready) veil.ready();
+  /**
+   * The veil waits on the scene, and the scene waits on the network. A model
+   * that never decodes would otherwise leave the veil up forever at 70% —
+   * the exact failure the asset banner is there to name, except the reader
+   * never gets to see the page underneath it. So readiness has a watchdog:
+   * past this the page opens anyway, with the banner saying what is missing.
+   */
+  const READY_TIMEOUT_MS = 12000;
+  const watchdog = window.setTimeout(() => {
+    if (s.ready) return;
+    reportAssetFailure(ASSET_BASE_URL + "/hero/scene (did not finish loading)");
+    section.classList.add("hero--flat");
+    veil.ready();
+  }, READY_TIMEOUT_MS);
+
+  s.onReady = () => {
+    window.clearTimeout(watchdog);
+    veil.ready();
+  };
+  if (s.ready) {
+    window.clearTimeout(watchdog);
+    veil.ready();
+  }
   veil.onHandover(() => {
     beginEntrance();
     s.beginRise();
